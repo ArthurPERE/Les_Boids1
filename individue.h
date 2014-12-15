@@ -54,7 +54,12 @@ class individue
     // =======================================================================
     //                            Accessors: getters
     // =======================================================================
-
+    int Get_i(void);
+    int Get_j(void);
+    float Get_x(int ind);
+    float Get_y(int ind);
+    float Get_vx(int ind);
+    float Get_vy(int ind);
     // =======================================================================
     //                            Accessors: setters
     // =======================================================================
@@ -66,11 +71,13 @@ class individue
     // =======================================================================
     //                              Public Methods
     // =======================================================================
+    int* detection(int ind); //for detecte the individue around the individue number ind
+    int* organisation(void); //for organize the individue
 
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
-
+    int number_of_individue;
 
 
 
@@ -99,6 +106,15 @@ class individue
     // =======================================================================
     //                             Protected Attributes
     // =======================================================================
+    int i;     //numero of the individue
+    int* j;    //numero of the individue around the individue i
+    
+    double x;   //position x of i
+    double y;   //position y of i
+    double vx;  //speed x coordonate of i
+    double vy;  //speed x coordonate of i
+
+
 };
 
 
