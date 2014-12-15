@@ -10,13 +10,15 @@
 // ===========================================================================
 //                                   Libraries
 // ===========================================================================
-
+#include <cstdio>
+#include <cstdlib>
 
 
 // ===========================================================================
 //                                 Project Files
 // ===========================================================================
 #include "individue.h"
+
 
 
 
@@ -36,7 +38,7 @@
 // ===========================================================================
 individue::individue(void)
 {
-	i=NULL;
+	i=0;
 	j=NULL;
 	tab = NULL;
 
@@ -46,6 +48,24 @@ individue::individue(void)
 	vy=0;
 }
 
+void individue::initialization(void)
+{
+	tab = new double*[number_of_individue];
+
+
+	for (i = 0; i < number_of_individue; ++i)
+	{
+		double* tab[i] = new double[4];
+		(tab[i])[0] = rand() / boid->Get_width();  //for x
+		(tab[i])[1] = rand() / boid->Get_height();  //for y
+
+		(tab[i])[2] = (rand() / 2*boid->Get_speed_limit()) - boid->Get_speed_limit();  //for vx
+		(tab[i])[3] = (rand() / 2*boid->Get_speed_limit()) - boid->Get_speed_limit();  //for vy
+	}
+
+
+}
+
 
 
 // ===========================================================================
@@ -53,12 +73,13 @@ individue::individue(void)
 // ===========================================================================
 individue::~individue(void)
 {
-	for (int ind = 0; ind< number_of_individue; ++ind)
+	for (i = 0; i< number_of_individue; ++i)
 	{
-		delete[] i;
+		delete[] tab[i];
 	}
 
 	delete[] tab;
+	delete boid;
 }
 
 // ===========================================================================

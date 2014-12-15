@@ -20,7 +20,7 @@
 // ===========================================================================
 //                                Project Files
 // ===========================================================================
-
+#include "boids.h"
 
 
 
@@ -54,8 +54,10 @@ class individue
     // =======================================================================
     //                            Accessors: getters
     // =======================================================================
+    double** Get_tab(void);
     int Get_i(void);
-    int Get_j(void);
+    int* Get_j(void);
+
     float Get_x(int ind);
     float Get_y(int ind);
     float Get_vx(int ind);
@@ -109,7 +111,7 @@ class individue
     // =======================================================================
     //                             Protected Attributes
     // =======================================================================
-    double* i;     //tableau with every atribute of the individue i
+    int i;
     int* j;    //numero of the individue around the individue i
 
     double** tab;  //tableau of i;
@@ -119,6 +121,7 @@ class individue
     double vx;  //speed x coordonate of i
     double vy;  //speed x coordonate of i
 
+    boids* boid;
 
 };
 
