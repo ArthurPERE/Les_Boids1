@@ -72,12 +72,15 @@ class individue
     //                              Public Methods
     // =======================================================================
     int* detection(int ind); //for detecte the individue around the individue number ind
-    int* organisation(void); //for organize the individue
+    
+    void organisation(int ind); //for organize the individue ind
+
+    void initialization(void); //for initialize the parameter
 
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
-    int number_of_individue;
+    int number_of_individue; //number total of individue
 
 
 
@@ -106,8 +109,10 @@ class individue
     // =======================================================================
     //                             Protected Attributes
     // =======================================================================
-    int i;     //numero of the individue
+    double* i;     //tableau with every atribute of the individue i
     int* j;    //numero of the individue around the individue i
+
+    double** tab;  //tableau of i;
     
     double x;   //position x of i
     double y;   //position y of i
