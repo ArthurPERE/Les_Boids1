@@ -117,7 +117,6 @@ class boids
     //                             Protected Attributes
     // =======================================================================
     double speed_limit;
-    individue* Individue;
 
 };
 

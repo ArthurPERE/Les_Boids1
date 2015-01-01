@@ -18,6 +18,7 @@
 //                                 Project Files
 // ===========================================================================
 #include "boids.h"
+#include "individue.h"
 
 
 
@@ -75,6 +76,7 @@ double* boids::rule4(int ind)
 
 void boids::deplacement(void)
 {
+    individue* Individue;
     double** tab = Individue->Get_tab();
     
 }
