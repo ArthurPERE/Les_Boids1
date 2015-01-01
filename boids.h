@@ -67,6 +67,7 @@ class boids
     void Set_height(int h);
     void Set_disti(double di);
     void Set_disto(double di);
+    void Set_dt(double dtt);
     // =======================================================================
     //                                Operators
     // =======================================================================
@@ -85,7 +86,7 @@ class boids
     int height; //the height of the cader
     double disti; //the distance of detection of the individue
     double disto; //the distance of detedction of the object
-
+    double dt;
 
 
 
@@ -131,10 +132,11 @@ double boids::Get_disto(void) const {return disto;}
 // ===========================================================================
 //                              Setters' definitions
 // ===========================================================================
-void Set_width(int w) {width = w;}
-void Set_height(int h) {height = h;}
-void Set_disti(double di) {disti = di;}
-void Set_disto(double di) {disto = di;}
+void boids::Set_width(int w) {width = w;}
+void boids::Set_height(int h) {height = h;}
+void boids::Set_disti(double di) {disti = di;}
+void boids::Set_disto(double di) {disto = di;}
+void boids::Set_dt(double dtt) {dt = dtt;}
 // ===========================================================================
 //                             Operators' definitions
 // ===========================================================================
