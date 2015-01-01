@@ -54,18 +54,20 @@ class individue
     // =======================================================================
     //                            Accessors: getters
     // =======================================================================
-    double** Get_tab(void);
-    int Get_i(void);
-    int* Get_j(void);
+    double** Get_tab(void) const;
+    int Get_i(void) const;
+    int* Get_around(void) const;
 
-    float Get_x(int ind);
-    float Get_y(int ind);
-    float Get_vx(int ind);
-    float Get_vy(int ind);
+    double Get_x(int ind) const;
+    double Get_y(int ind) const;
+    double Get_vx(int ind) const;
+    double Get_vy(int ind) const;
+    
+    int Get_population(void) const;
     // =======================================================================
     //                            Accessors: setters
     // =======================================================================
-
+    void Set_population(int n);
     // =======================================================================
     //                                Operators
     // =======================================================================
@@ -82,7 +84,7 @@ class individue
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
-    int number_of_individue; //number total of individue
+    int population; //number total of individue
 
 
 
@@ -112,9 +114,9 @@ class individue
     //                             Protected Attributes
     // =======================================================================
     int i;
-    int* j;    //numero of the individue around the individue i
+    int* around;    //numero of the individue around the individue i
 
-    double** tab;  //tableau of i;
+    double** tab;  //tableau of individue;
     
     double x;   //position x of i
     double y;   //position y of i
@@ -129,11 +131,23 @@ class individue
 // ===========================================================================
 //                              Getters' definitions
 // ===========================================================================
+double** individue::Get_tab(void) const{return tab;}
+int individue::Get_i(void) const {return i;}
+int* individue::Get_around(void) const {return around;}
 
+double individue::Get_x(int ind) const {return (tab[ind])[0];}
+double individue::Get_y(int ind) const {return (tab[ind])[1];}
+double individue::Get_vx(int ind) const {return (tab[ind])[2];}
+double individue::Get_vy(int ind) const {return (tab[ind])[3];}
+
+int individue::Get_population(void) const {return population;}
 // ===========================================================================
 //                              Setters' definitions
 // ===========================================================================
-
+void individue::Set_population(int n)
+{
+    population = n;
+}
 // ===========================================================================
 //                             Operators' definitions
 // ===========================================================================

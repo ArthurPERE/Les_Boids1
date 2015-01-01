@@ -38,8 +38,8 @@
 // ===========================================================================
 individue::individue(void)
 {
-	i=0;
-	j=NULL;
+    i=0;
+	around=NULL;
 	tab = NULL;
 
 	x=0;
@@ -50,20 +50,20 @@ individue::individue(void)
 
 void individue::initialization(void)
 {
-	tab = new double*[number_of_individue];
+	tab = new double*[population];
 
 
-	for (i = 0; i < number_of_individue; ++i)
+	for (i = 0; i < population; ++i)
 	{
-		double* tab[i] = new double[4];
-		(tab[i])[0] = rand() / boid->Get_width();  //for x
-		(tab[i])[1] = rand() / boid->Get_height();  //for y
+        tab[i] = new double[4];
+        
+        
+		(tab[i])[0] = boid->Get_width() * ( (double)rand() / (double)RAND_MAX );  //for x
+		(tab[i])[1] = boid->Get_height() * ( (double)rand() / (double)RAND_MAX );  //for y
 
-		(tab[i])[2] = (rand() / 2*boid->Get_speed_limit()) - boid->Get_speed_limit();  //for vx
-		(tab[i])[3] = (rand() / 2*boid->Get_speed_limit()) - boid->Get_speed_limit();  //for vy
+		(tab[i])[2] = 2*boid->Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - boid->Get_speed_limit();  //for vx
+		(tab[i])[3] = 2*boid->Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - boid->Get_speed_limit();  //for vy
 	}
-
-
 }
 
 
@@ -73,7 +73,7 @@ void individue::initialization(void)
 // ===========================================================================
 individue::~individue(void)
 {
-	for (i = 0; i< number_of_individue; ++i)
+	for (i = 0; i< population; ++i)
 	{
 		delete[] tab[i];
 	}
@@ -93,3 +93,23 @@ individue::~individue(void)
 // ===========================================================================
 //                               Non inline accessors
 // ===========================================================================
+
+
+int main(void)
+{
+    individue Individue = individue();
+    
+    Individue.initialization();
+    Individue.Set_population(10);
+    
+    for (int i=0; i<Individue.Get_population(); i++)
+    {
+        printf("%lg\n", Individue.Get_x(i));
+        printf("%lg\n", Individue.Get_y(i));
+        printf("%lg\n", Individue.Get_vx(i));
+        printf("%lg\n", Individue.Get_vy(i));
+    }
+    
+    return 0;
+
+}

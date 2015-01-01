@@ -38,7 +38,19 @@
 // ===========================================================================
 int main(int argc, char* argv[])
 {
-  printf("Hello World !\n");
+    boids Boids = boids();
+    individue Individue = individue();
+    
+    Individue.initialization();
+    Individue.Set_population(10);
+    
+    for (int i=0; i<Individue.Get_population(); i++)
+    {
+        printf("%lg\n", Individue.Get_x(i));
+        printf("%lg\n", Individue.Get_y(i));
+        printf("%lg\n", Individue.Get_vx(i));
+        printf("%lg\n", Individue.Get_vy(i));
+    }
 
   return 0;
 }
