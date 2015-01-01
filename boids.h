@@ -58,10 +58,15 @@ class boids
     int Get_width(void) const;
     int Get_height(void) const;
     double Get_speed_limit(void) const;
+    double Get_disti(void) const;
+    double Get_disto(void) const;
     // =======================================================================
     //                            Accessors: setters
     // =======================================================================
-
+    void Set_width(int w);
+    void Set_height(int h);
+    void Set_disti(double di);
+    void Set_disto(double di);
     // =======================================================================
     //                                Operators
     // =======================================================================
@@ -69,12 +74,17 @@ class boids
     // =======================================================================
     //                              Public Methods
     // =======================================================================
-
+    double* rule1(int ind);
+    double* rule2(int ind);
+    double* rule3(int ind);
+    double* rule4(int ind);
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
-    int width;
-    int height;
+    int width; //the widht of the cader
+    int height; //the height of the cader
+    double disti; //the distance of detection of the individue
+    double disto; //the distance of detedction of the object
 
 
 
@@ -114,10 +124,17 @@ class boids
 int boids::Get_width(void) const {return width;}
 int boids::Get_height(void) const {return height;}
 double boids::Get_speed_limit(void) const {return speed_limit;}
+double boids::Get_disti(void) const {return disti;}
+double boids::Get_disto(void) const {return disto;}
+
+
 // ===========================================================================
 //                              Setters' definitions
 // ===========================================================================
-
+void Set_width(int w) {width = w;}
+void Set_height(int h) {height = h;}
+void Set_disti(double di) {disti = di;}
+void Set_disto(double di) {disto = di;}
 // ===========================================================================
 //                             Operators' definitions
 // ===========================================================================
