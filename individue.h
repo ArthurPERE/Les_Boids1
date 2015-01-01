@@ -56,7 +56,6 @@ class individue
     // =======================================================================
     double** Get_tab(void) const;
     int Get_i(void) const;
-    int* Get_around(void) const;
 
     double Get_x(int ind) const;
     double Get_y(int ind) const;
@@ -75,10 +74,8 @@ class individue
     // =======================================================================
     //                              Public Methods
     // =======================================================================
-    int* detection(int ind); //for detecte the individue around the individue number ind
+    int* detection(int ind, double dist); //for detecte the individue around the individue number ind
     
-    void organisation(int ind); //for organize the individue ind
-
     void initialization(void); //for initialize the parameter
 
     // =======================================================================
@@ -114,7 +111,6 @@ class individue
     //                             Protected Attributes
     // =======================================================================
     int i;
-    int* around;    //numero of the individue around the individue i
 
     double** tab;  //tableau of individue;
     
@@ -133,7 +129,6 @@ class individue
 // ===========================================================================
 double** individue::Get_tab(void) const{return tab;}
 int individue::Get_i(void) const {return i;}
-int* individue::Get_around(void) const {return around;}
 
 double individue::Get_x(int ind) const {return (tab[ind])[0];}
 double individue::Get_y(int ind) const {return (tab[ind])[1];}

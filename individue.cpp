@@ -39,7 +39,6 @@
 individue::individue(void)
 {
     i=0;
-	around=NULL;
 	tab = NULL;
 
 	x=0;
@@ -48,7 +47,24 @@ individue::individue(void)
 	vy=0;
 }
 
-void individue::initialization(void)
+// ===========================================================================
+//                                  Destructor
+// ===========================================================================
+individue::~individue(void)
+{
+	for (i = 0; i< population; ++i)
+	{
+		delete[] tab[i];
+	}
+
+	delete[] tab;
+	delete boid;
+}
+
+// ===========================================================================
+//                                 Public Methods
+// ===========================================================================
+void individue::initialization(void)  //for initialize the problem
 {
 	tab = new double*[population];
 
@@ -68,24 +84,49 @@ void individue::initialization(void)
 
 
 
-// ===========================================================================
-//                                  Destructor
-// ===========================================================================
-individue::~individue(void)
+
+
+int* individue::detection(int ind, double dist)  //for detecte the individue around
 {
-	for (i = 0; i< population; ++i)
-	{
-		delete[] tab[i];
-	}
-
-	delete[] tab;
-	delete boid;
+    int compteur = 0;  //for compte the individue around in the distance dist
+    int tableau[population];
+    
+    double xpos = Get_x(ind);  //for performance reason
+    double ypos = Get_y(ind);  //for performance reason
+    
+    for (i=0; i<population; i++)
+    {
+        double a = (xpos-Get_x(i))*(xpos-Get_x(i)) - (ypos-Get_y(i))*(ypos-Get_y(i)); //distance between 2 individue
+        
+        if (a<=dist*dist)
+        {
+            tableau[i] = i;
+            compteur++;
+        }
+        else
+        {
+            tableau[i] = population+12;  //for if i=0 respond to the critere of the if
+        }
+    }
+    
+    int* around = new int[compteur];
+    int a = 0;
+    
+    for (i=0; i<population; i++)
+    {
+        if (tableau[i]<=population)
+        {
+            around[a] = tableau[i];
+            a++;
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    return around;
 }
-
-// ===========================================================================
-//                                 Public Methods
-// ===========================================================================
-
 // ===========================================================================
 //                                Protected Methods
 // ===========================================================================
@@ -93,23 +134,3 @@ individue::~individue(void)
 // ===========================================================================
 //                               Non inline accessors
 // ===========================================================================
-
-
-int main(void)
-{
-    individue Individue = individue();
-    
-    Individue.initialization();
-    Individue.Set_population(10);
-    
-    for (int i=0; i<Individue.Get_population(); i++)
-    {
-        printf("%lg\n", Individue.Get_x(i));
-        printf("%lg\n", Individue.Get_y(i));
-        printf("%lg\n", Individue.Get_vx(i));
-        printf("%lg\n", Individue.Get_vy(i));
-    }
-    
-    return 0;
-
-}
