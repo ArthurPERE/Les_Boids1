@@ -51,7 +51,33 @@ boids::~boids(void)
 // ===========================================================================
 //                                 Public Methods
 // ===========================================================================
+double* boids::rule1(int ind)
+{
 
+}
+
+double* boids::rule2(int ind)
+{
+
+}
+
+double* boids::rule3(int ind)
+{
+    
+}
+
+double* boids::rule4(int ind)
+{
+    
+}
+
+
+
+void boids::deplacement(void)
+{
+    double** tab = Individue->Get_tab();
+    
+}
 // ===========================================================================
 //                                Protected Methods
 // ===========================================================================

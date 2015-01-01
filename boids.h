@@ -79,6 +79,8 @@ class boids
     double* rule2(int ind);
     double* rule3(int ind);
     double* rule4(int ind);
+    
+    void deplacement(void);
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
@@ -115,6 +117,7 @@ class boids
     //                             Protected Attributes
     // =======================================================================
     double speed_limit;
+    individue* Individue;
 
 };
 
