@@ -109,8 +109,8 @@ int* individue::detection(int ind, double dist)  //for detecte the individue aro
         }
     }
     
-    int* around = new int[compteur];
-    int a = 0;
+    int* around = new int[compteur+1];
+    int a = 1;
     
     for (i=0; i<population; i++)
     {
@@ -124,7 +124,7 @@ int* individue::detection(int ind, double dist)  //for detecte the individue aro
             break;
         }
     }
-    
+    around[0] = compteur; //for have how many content around have for the for boucle in the function rule
     return around;
 }
 // ===========================================================================
