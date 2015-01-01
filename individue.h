@@ -67,6 +67,7 @@ class individue
     //                            Accessors: setters
     // =======================================================================
     void Set_population(int n);
+    void Set_tab(double** tab1);
     // =======================================================================
     //                                Operators
     // =======================================================================
@@ -139,10 +140,8 @@ int individue::Get_population(void) const {return population;}
 // ===========================================================================
 //                              Setters' definitions
 // ===========================================================================
-void individue::Set_population(int n)
-{
-    population = n;
-}
+void individue::Set_population(int n){population = n;}
+void individue::Set_tab(double** tab1){tab = tab1;}
 // ===========================================================================
 //                             Operators' definitions
 // ===========================================================================
