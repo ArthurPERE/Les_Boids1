@@ -79,6 +79,14 @@ void boids::deplacement(void)
     individue* Individue;
     double** tab = Individue->Get_tab();
     
+    for (int i=0; i<Individue->Get_population(); i++)
+    {
+        (tab[i])[0] = Individue->Get_x(i) + dt*Individue->Get_vx(i);  //for change the x
+        (tab[i])[1] = Individue->Get_y(i) + dt*Individue->Get_vy(i);  //for change the y
+    }
+    
+    Individue->Set_tab(tab);
+    
 }
 // ===========================================================================
 //                                Protected Methods
