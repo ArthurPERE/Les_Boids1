@@ -85,7 +85,7 @@ void boids::deplacement(void)
         (tab[i])[1] = Individue->Get_y(i) + dt*Individue->Get_vy(i);  //for change the y
     }
     
-    Individue->Set_tab(tab);
+    Individue->Set_tab(tab);  //useless or usefull ?
     
 }
 // ===========================================================================
