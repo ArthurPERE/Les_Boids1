@@ -17,7 +17,7 @@
 // ===========================================================================
 //                                 Project Files
 // ===========================================================================
-
+#include "individue.h"
 
 
 
@@ -37,13 +37,15 @@
 // ===========================================================================
 individue::individue(void)
 {
-    i=0;
-	tab = NULL;
+    width = 10;
+    height = 10;
+    speed_limit = 10.;
 
-	x=0;
-	y=0;
-	vx=0;
-	vy=0;
+	x = Get_width() * ( (double)rand() / (double)RAND_MAX );
+	y = Get_height() * ( (double)rand() / (double)RAND_MAX );
+
+	vx = 2*Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - Get_speed_limit();
+	vy = 2*Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - Get_speed_limit();
 }
 
 // ===========================================================================
@@ -51,40 +53,14 @@ individue::individue(void)
 // ===========================================================================
 individue::~individue(void)
 {
-	for (i = 0; i< population; ++i)
-	{
-		delete[] tab[i];
-	}
 
-	delete[] tab;
-	delete boid;
 }
 
 // ===========================================================================
 //                                 Public Methods
 // ===========================================================================
-void individue::initialization(void)  //for initialize the problem
-{
-	tab = new double*[population];
 
-
-	for (i = 0; i < population; ++i)
-	{
-        tab[i] = new double[4];
-        
-        
-		(tab[i])[0] = Get_width() * ( (double)rand() / (double)RAND_MAX );  //for x
-		(tab[i])[1] = Get_height() * ( (double)rand() / (double)RAND_MAX );  //for y
-
-		(tab[i])[2] = 2*Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - boid->Get_speed_limit();  //for vx
-		(tab[i])[3] = 2*Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - boid->Get_speed_limit();  //for vy
-	}
-}
-
-
-
-
-
+/*
 int* individue::detection(int ind, double dist)  //for detecte the individue around
 {
     int compteur = 0;  //for compte the individue around in the distance dist
@@ -125,7 +101,7 @@ int* individue::detection(int ind, double dist)  //for detecte the individue aro
     }
     around[0] = compteur; //for have how many content around have for the for boucle in the function rule
     return around;
-}
+}*/
 // ===========================================================================
 //                                Protected Methods
 // ===========================================================================

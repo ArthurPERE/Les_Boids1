@@ -54,33 +54,34 @@ class individue
     // =======================================================================
     //                            Accessors: getters
     // =======================================================================
-    double Get_x(int ind) const;
-    double Get_y(int ind) const;
+    inline double Get_x(void) const;
+    inline double Get_y(void) const;
 
-    double Get_vx(int ind) const;
-    double Get_vy(int ind) const;
-    double Get_speed_limit(void) const;
+    inline double Get_vx(void) const;
+    inline double Get_vy(void) const;
+    inline double Get_speed_limit(void) const;
     
-    int Get_population(void) const;
 
-    int Get_width(void) const;
-    int Get_height(void) const;
+    inline int Get_width(void) const;
+    inline int Get_height(void) const;
 
-
-
-    double Get_disti(void) const;
-    double Get_disto(void) const;
+    inline double Get_disti(void) const;
+    inline double Get_disto(void) const;
     // =======================================================================
     //                            Accessors: setters
     // =======================================================================
-    void Set_population(int n);
-    void Set_tab(double** tab1);
+    inline void Set_x(double x1);
+    inline void Set_y(double y1);
 
-    void Set_width(int w);
-    void Set_height(int h);
+    inline void Set_vx(double vx1);
+    inline void Set_vy(double vy1);
+    inline void Set_speed_limit(double sl);
 
-    void Set_disti(double di);
-    void Set_disto(double di);
+    inline void Set_width(int w);
+    inline void Set_height(int h);
+
+    inline void Set_disti(double di);
+    inline void Set_disto(double di);
     // =======================================================================
     //                                Operators
     // =======================================================================
@@ -90,8 +91,6 @@ class individue
     // =======================================================================
     int* detection(int ind, double dist); //for detecte the individue around the individue number ind
     
-    void initialization(void); //for initialize the parameter
-
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
@@ -124,8 +123,6 @@ class individue
     // =======================================================================
     //                             Protected Attributes
     // ======================================================================= 
-    int i;
-    double** tab;
 
     double x;   //position x of i
     double y;   //position y of i
@@ -140,8 +137,6 @@ class individue
     double disti; //the distance of detection of the individue
     double disto; //the distance of detedction of the object
 
-    int population; //number total of individue
-
 };
 
 
@@ -149,33 +144,35 @@ class individue
 //                              Getters' definitions
 // ===========================================================================
 
-double individue::Get_x(int ind) const {return (tab[ind])[0];}
-double individue::Get_y(int ind) const {return (tab[ind])[1];}
+inline double individue::Get_x(void) const {return x;}
+inline double individue::Get_y(void) const {return y;}
 
-double individue::Get_vx(int ind) const {return (tab[ind])[2];}
-double individue::Get_vy(int ind) const {return (tab[ind])[3];}
-double individue::Get_speed_limit(void) const {return speed_limit;}
-
-int individue::Get_population(void) const {return population;}
-
-int individue::Get_width(void) const {return width;}
-int individue::Get_height(void) const {return height;}
+inline double individue::Get_vx(void) const {return vx;}
+inline double individue::Get_vy(void) const {return vy;}
+inline double individue::Get_speed_limit(void) const {return speed_limit;}
 
 
+inline int individue::Get_width(void) const {return width;}
+inline int individue::Get_height(void) const {return height;}
 
-double individue::Get_disti(void) const {return disti;}
-double individue::Get_disto(void) const {return disto;}
+inline double individue::Get_disti(void) const {return disti;}
+inline double individue::Get_disto(void) const {return disto;}
 // ===========================================================================
 //                              Setters' definitions
 // ===========================================================================
-void individue::Set_population(int n){population = n;}
-void individue::Set_tab(double** tab1){tab = tab1;}
 
-void individue::Set_width(int w) {width = w;}
-void individue::Set_height(int h) {height = h;}
+inline void individue::Set_x(double x1){x=x1;}
+inline void individue::Set_y(double y1){y=y1;}
 
-void individue::Set_disti(double di) {disti = di;}
-void individue::Set_disto(double di) {disto = di;}
+inline void individue::Set_vx(double vx1){vx=vx1;}
+inline void individue::Set_vy(double vy1){vy=vy1;}
+inline void individue::Set_speed_limit(double sl)  {speed_limit=sl;}
+
+inline void individue::Set_width(int w) {width = w;}
+inline void individue::Set_height(int h) {height = h;}
+
+inline void individue::Set_disti(double di) {disti = di;}
+inline void individue::Set_disto(double di) {disto = di;}
 // ===========================================================================
 //                             Operators' definitions
 // ===========================================================================

@@ -22,6 +22,7 @@
 #include "individue.h"
 
 
+
 // ===========================================================================
 //                         Declare Miscellaneous Functions
 // ===========================================================================
@@ -41,15 +42,23 @@ int main(int argc, char* argv[])
     boids Boids = boids();
     individue Individue = individue();
     
-    Individue.initialization();
-    Individue.Set_population(10);
-    
-    for (int i=0; i<Individue.Get_population(); i++)
+    Individue.Set_width(11);
+    Individue.Set_height(10);
+    Individue.Set_speed_limit(10.);
+
+    individue* tab = Boids.initialization();
+
+    printf("%d\n", Individue.Get_width());
+
+    for (int i = 0; i < Boids.Get_population(); ++i)
     {
-        printf("%lg\n", Individue.Get_x(i));
-        printf("%lg\n", Individue.Get_y(i));
-        printf("%lg\n", Individue.Get_vx(i));
-        printf("%lg\n", Individue.Get_vy(i));
+        printf("%lg\n", tab[i].Get_x());
+        printf("%lg\n", tab[i].Get_y());
+
+        printf("%lg\n", tab[i].Get_vx());
+        printf("%lg\n", tab[i].Get_vy());
+
+        printf("\n");
     }
 
   return 0;
