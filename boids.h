@@ -56,11 +56,12 @@ class boids
     //                            Accessors: getters
     // =======================================================================
     inline int Get_population(void) const;
+
+    inline individue* Get_tab(void) const;
     // =======================================================================
     //                            Accessors: setters
     // =======================================================================
     inline void Set_dt(double dtt);
-
     inline void Set_population(int n);
     // =======================================================================
     //                                Operators
@@ -76,7 +77,7 @@ class boids
     
     void deplacement(void);
 
-    individue* initialization(void);
+    int* detection(int ind, double dist); //for detecte the individue around ind
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
@@ -110,8 +111,9 @@ class boids
     // =======================================================================
     double dt;
 
-    individue* tab;
+    individue Individue;
 
+    individue* tab;
     int population; //number total of individue
 
 };
@@ -120,8 +122,9 @@ class boids
 // ===========================================================================
 //                              Getters' definitions
 // ===========================================================================
-inline int boids::Get_population(void) const {return population;}
+inline individue* boids::Get_tab(void) const{return tab;}
 
+inline int boids::Get_population(void) const {return population;}
 
 // ===========================================================================
 //                              Setters' definitions

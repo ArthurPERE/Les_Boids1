@@ -42,13 +42,11 @@ int main(int argc, char* argv[])
     boids Boids = boids();
     individue Individue = individue();
     
-    Individue.Set_width(11);
+    Individue.Set_width(10);
     Individue.Set_height(10);
     Individue.Set_speed_limit(10.);
 
-    individue* tab = Boids.initialization();
-
-    printf("%d\n", Individue.Get_width());
+    individue* tab = Boids.Get_tab();
 
     for (int i = 0; i < Boids.Get_population(); ++i)
     {
@@ -58,7 +56,14 @@ int main(int argc, char* argv[])
         printf("%lg\n", tab[i].Get_vx());
         printf("%lg\n", tab[i].Get_vy());
 
-        printf("\n");
+        printf("\n\n");
+    }
+
+    int* tab1 = Boids.detection(1,3.);
+    printf("%d\n", tab1[0]);
+    for (int i = 0; i < tab1[0]; ++i)
+    {
+        printf("%d\n", tab1[i+1]);
     }
 
   return 0;

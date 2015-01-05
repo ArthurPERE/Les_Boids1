@@ -89,7 +89,7 @@ class individue
     // =======================================================================
     //                              Public Methods
     // =======================================================================
-    int* detection(int ind, double dist); //for detecte the individue around the individue number ind
+
     
     // =======================================================================
     //                             Public Attributes
