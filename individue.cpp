@@ -75,11 +75,11 @@ void individue::initialization(void)  //for initialize the problem
         tab[i] = new double[4];
         
         
-		(tab[i])[0] = boid->Get_width() * ( (double)rand() / (double)RAND_MAX );  //for x
-		(tab[i])[1] = boid->Get_height() * ( (double)rand() / (double)RAND_MAX );  //for y
+		(tab[i])[0] = Get_width() * ( (double)rand() / (double)RAND_MAX );  //for x
+		(tab[i])[1] = Get_height() * ( (double)rand() / (double)RAND_MAX );  //for y
 
-		(tab[i])[2] = 2*boid->Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - boid->Get_speed_limit();  //for vx
-		(tab[i])[3] = 2*boid->Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - boid->Get_speed_limit();  //for vy
+		(tab[i])[2] = 2*Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - boid->Get_speed_limit();  //for vx
+		(tab[i])[3] = 2*Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - boid->Get_speed_limit();  //for vy
 	}
 }
 
