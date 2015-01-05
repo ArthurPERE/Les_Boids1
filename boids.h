@@ -21,7 +21,7 @@
 // ===========================================================================
 //                                Project Files
 // ===========================================================================
-
+#include "individue.h"
 
 
 
@@ -55,18 +55,10 @@ class boids
     // =======================================================================
     //                            Accessors: getters
     // =======================================================================
-    int Get_width(void) const;
-    int Get_height(void) const;
-    double Get_speed_limit(void) const;
-    double Get_disti(void) const;
-    double Get_disto(void) const;
+
     // =======================================================================
     //                            Accessors: setters
     // =======================================================================
-    void Set_width(int w);
-    void Set_height(int h);
-    void Set_disti(double di);
-    void Set_disto(double di);
     void Set_dt(double dtt);
     // =======================================================================
     //                                Operators
@@ -84,10 +76,6 @@ class boids
     // =======================================================================
     //                             Public Attributes
     // =======================================================================
-    int width; //the widht of the cader
-    int height; //the height of the cader
-    double disti; //the distance of detection of the individue
-    double disto; //the distance of detedction of the object
     double dt;
 
 
@@ -116,7 +104,6 @@ class boids
     // =======================================================================
     //                             Protected Attributes
     // =======================================================================
-    double speed_limit;
 
 };
 
@@ -124,20 +111,12 @@ class boids
 // ===========================================================================
 //                              Getters' definitions
 // ===========================================================================
-int boids::Get_width(void) const {return width;}
-int boids::Get_height(void) const {return height;}
-double boids::Get_speed_limit(void) const {return speed_limit;}
-double boids::Get_disti(void) const {return disti;}
-double boids::Get_disto(void) const {return disto;}
+
 
 
 // ===========================================================================
 //                              Setters' definitions
 // ===========================================================================
-void boids::Set_width(int w) {width = w;}
-void boids::Set_height(int h) {height = h;}
-void boids::Set_disti(double di) {disti = di;}
-void boids::Set_disto(double di) {disto = di;}
 void boids::Set_dt(double dtt) {dt = dtt;}
 // ===========================================================================
 //                             Operators' definitions
