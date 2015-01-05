@@ -41,10 +41,6 @@ int main(int argc, char* argv[])
 {
     boids Boids = boids();
     individue Individue = individue();
-    
-    Individue.Set_width(10);
-    Individue.Set_height(10);
-    Individue.Set_speed_limit(10.);
 
     individue* tab = Boids.Get_tab();
 
@@ -65,6 +61,7 @@ int main(int argc, char* argv[])
     {
         printf("%d\n", tab1[i+1]);
     }
+    delete[] tab1;
 
   return 0;
 }

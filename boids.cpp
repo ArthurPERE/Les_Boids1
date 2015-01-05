@@ -40,7 +40,11 @@ boids::boids(void)
 {
 	dt = 0.1;
 	population = 10;
-	tab = new individue[Get_population()];
+	
+    
+    disti = 2.;
+    disto = 4.;
+    distc = 1.;
 }
 
 // ===========================================================================
@@ -54,39 +58,116 @@ boids::~boids(void)
 // ===========================================================================
 //                                 Public Methods
 // ===========================================================================
-/*
+
+void boids::initialization(void)
+{
+	tab = new individue[Get_population()];
+}
+
 double* boids::rule1(int ind)
 {
+	int* around = detection(ind,Get_disti()); //tableau for around people
 
+	double vx = tab[ind].Get_vx();
+	double vy = tab[ind].Get_vy();
+
+	for (int i = 0; i < around[0]; ++i)
+	{
+		int a = around[i+1];
+
+		vx += (tab[a].Get_vx() - vx);
+		vy += (tab[a].Get_vy() - vy);
+	}
+
+    double* speed =new double[2];
+
+	speed[0] = vx/around[0];
+	speed[1] = vy/around[0];
+
+	delete[] around;
+
+    return speed;
 }
 
 double* boids::rule2(int ind)
 {
+	int* around = detection(ind,Get_disti()); //tableau for around people
 
+	double vx = tab[ind].Get_vx();
+	double vy = tab[ind].Get_vy();
+
+	for (int i = 0; i < around[0]; ++i)
+	{
+		int a = around[i+1];
+
+		vx += (tab[a].Get_x() - vx);
+		vy += (tab[a].Get_y() - vy);
+	}
+
+    double* speed = new double[2];
+
+	speed[0] = vx/around[0];
+	speed[1] = vy/around[0];
+
+	delete[] around;
+
+    return speed;
 }
 
 double* boids::rule3(int ind)
 {
-    
+    int* around = detection(ind,Get_distc()); //tableau for around people
+
+    double vx = tab[ind].Get_vx();
+    double vy = tab[ind].Get_vy();
+
+    for (int i = 0; i < around[0]; ++i)
+    {
+        int a = around[i+1];
+
+        vx += (tab[a].Get_x() - vx);
+        vy += (tab[a].Get_y() - vy);
+    }
+
+    double* speed = new double[2];
+
+    speed[0] = vx/around[0];
+    speed[1] = vy/around[0];
+
+    delete[] around;
+
+    return speed;
 }
 
 double* boids::rule4(int ind)
 {
     
 }
-*/
 
-/*
+
+
 void boids::deplacement(void)
 {
-    for (int i=0; i<Individue->Get_population(); i++)
+    for (int i=0; i<Get_population(); i++)
     {
-        (tab[i])[0] = Individue->Get_x(i) + dt*Individue->Get_vx(i);  //for change the x
-        (tab[i])[1] = Individue->Get_y(i) + dt*Individue->Get_vy(i);  //for change the y
+        double x = tab[i].Get_x() + dt*tab[i].Get_vx();
+        double y = tab[i].Get_y() + dt*tab[i].Get_vy();
+
+        double* speed1 = rule1(i);
+        double* speed2 = rule2(i);
+        double* speed3 = rule3(i);
+
+        double vx = tab[i].Get_vx() + dt*(g1*speed1[0]+g2*speed2[0]+g3*speed3[0]);  //for change the x
+        double vy = tab[i].Get_vy() + dt*(g1*speed1[1]+g2*speed2[1]+g3*speed3[1]);  //for change the y
+        
+        tab[i].Set_x(x);
+        tab[i].Set_y(y);
+        tab[i].Set_vx(vx);
+        tab[i].Set_vy(vy);
     }
     
 }
-*/
+
 
 int* boids::detection(int ind, double dist)  //for detecte the individue around
 {
