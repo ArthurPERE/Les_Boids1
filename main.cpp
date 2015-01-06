@@ -20,6 +20,7 @@
 // ===========================================================================
 #include "boids.h"
 #include "individue.h"
+#include "bwindow.h"
 
 
 
@@ -42,26 +43,62 @@ int main(int argc, char* argv[])
     boids Boids = boids();
     individue Individue = individue();
 
+    
+    bwindow win(Individue.Get_width(),Individue.Get_height());
+    printf("%d\n",win.init());
+    win.map();
+
+    Boids.Set_population(100);
+
+    Boids.initialization();
+
+    int pop = Boids.Get_population();
+
+    for (;;)
+    {
+        win.draw_fsquare(0,0,Individue.Get_width(),Individue.Get_height(),0xFFFFFF);
+        int ev = win.parse_event();
+    switch(ev)
+    {
+        case BKPRESS :
+        printf("keypressed\n"); 
+        printf("key : %s\n",win.get_lastkey());
+        break;
+        case BBPRESS:
+        printf("buttonpressed\n"); break;
+        case BEXPOSE:
+        printf("expose\n"); break;
+        case BCONFIGURE:
+        printf("configure\n"); break;
+    }
+
     individue* tab = Boids.Get_tab();
 
-    for (int i = 0; i < Boids.Get_population(); ++i)
+    for (int i = 0; i < pop; ++i)
     {
-        printf("%lg\n", tab[i].Get_x());
-        printf("%lg\n", tab[i].Get_y());
-
-        printf("%lg\n", tab[i].Get_vx());
-        printf("%lg\n", tab[i].Get_vy());
-
-        printf("\n\n");
+        win.draw_fsquare(-4+tab[i].Get_x(),-4+tab[i].Get_y(),4+tab[i].Get_x(),4+tab[i].Get_y(),0xFF00);
     }
+    Boids.deplacement();
 
-    int* tab1 = Boids.detection(1,3.);
-    printf("%d\n", tab1[0]);
-    for (int i = 0; i < tab1[0]; ++i)
+    }
+    
+    /*
+    Boids.initialization();
+    individue* t = Boids.Get_tab();
+    for (int i = 0; i < 10; ++i)
     {
-        printf("%d\n", tab1[i+1]);
+        printf("%lg %lg %lg %lg\n", t[i].Get_x(),t[i].Get_y(),t[i].Get_vx(),t[i].Get_vy());
     }
-    delete[] tab1;
+    printf("\n");
+    Boids.deplacement();
+    for (int i = 0; i < 10; ++i)
+    {
+        printf("%lg %lg %lg %lg\n", t[i].Get_x(),t[i].Get_y(),t[i].Get_vx(),t[i].Get_vy());
+    }
+    */
+
+
+    
 
   return 0;
 }

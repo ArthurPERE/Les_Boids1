@@ -38,8 +38,10 @@
 individue::individue(void)
 {
 
-	width = 50;
-    height = 50;
+	width = 700;
+    height = 700;
+
+    speed_limit = 0.0001;
     
 	x = Get_width() * ( (double)rand() / (double)RAND_MAX );
 	y = Get_height() * ( (double)rand() / (double)RAND_MAX );

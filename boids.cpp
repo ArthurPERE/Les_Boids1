@@ -38,13 +38,17 @@
 // ===========================================================================
 boids::boids(void)
 {
-	dt = 0.1;
+	dt = 0.001;
 	population = 10;
 	
     
     disti = 2.;
     disto = 4.;
     distc = 1.;
+
+    g1 = 0.1;
+    g2 = 0.01;
+    g3 = 0.3;
 }
 
 // ===========================================================================
@@ -148,6 +152,8 @@ double* boids::rule4(int ind)
 
 void boids::deplacement(void)
 {
+    double sl = Individue.Get_speed_limit();
+
     for (int i=0; i<Get_population(); i++)
     {
         double x = tab[i].Get_x() + dt*tab[i].Get_vx();
@@ -162,8 +168,22 @@ void boids::deplacement(void)
         
         tab[i].Set_x(x);
         tab[i].Set_y(y);
+
+        if (vx > sl)
+        {
+            vx = sl;
+        }
+
+        if(vy > sl)
+        {
+            vy = sl;
+        }
         tab[i].Set_vx(vx);
         tab[i].Set_vy(vy);
+
+        delete[] speed1;
+        delete[] speed2;
+        delete[] speed3;
     }
     
 }

@@ -23,8 +23,6 @@
 // ===========================================================================
 #include "individue.h"
 
-
-
 // ===========================================================================
 //                              Class declarations
 // ===========================================================================
@@ -70,6 +68,10 @@ class boids
     inline void Set_disti(double di);
     inline void Set_disto(double di);
     inline void Set_distc(double di);
+
+    inline void Set_g1(double g);
+    inline void Set_g2(double g);
+    inline void Set_g3(double g);
     // =======================================================================
     //                                Operators
     // =======================================================================
@@ -129,6 +131,10 @@ class boids
     double disto; //the distance of object
     double distc; //the distance of contact
 
+    double g1; //gamma 1
+    double g2; //gamma 2
+    double g3; //gamma 3
+
 };
 
 
@@ -151,6 +157,10 @@ inline void boids::Set_population(int n){population = n;}
 inline void boids::Set_disti(double di){disti=di;}
 inline void boids::Set_disto(double di){disto=di;}
 inline void boids::Set_distc(double di){distc=di;}
+
+inline void boids::Set_g1(double g){g1 = g;}
+inline void boids::Set_g2(double g){g2 = g;}
+inline void boids::Set_g3(double g){g3 = g;}
 // ===========================================================================
 //                             Operators' definitions
 // ===========================================================================

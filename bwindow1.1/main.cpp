@@ -24,9 +24,9 @@ int main()
 		printf("configure\n"); break;
 	}
 	win.draw_point(100,100,0xFF00);
-	win.draw_line(100,100,200,200,0xFF0000);
+	win.draw_line(200,200,195,195,0xFF0000);
 	win.draw_text(10,10,0x0,"Hello World",strlen("Hello World"));
-	win.draw_square(200,200,220,220,0xFF00);
+	win.draw_square(0,0,205,205,0xFF00);
 	win.draw_fsquare(400,400,440,440,0xFF00);
     }
     return 0;
