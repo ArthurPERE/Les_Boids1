@@ -49,6 +49,11 @@ boids::boids(void)
     g1 = 0.1;
     g2 = 0.01;
     g3 = 0.3;
+
+    speed1 = new double[2];
+    speed2 = new double[2];
+    speed3 = new double[2];
+    speed4 = new double[2];
 }
 
 // ===========================================================================
@@ -57,6 +62,10 @@ boids::boids(void)
 boids::~boids(void)
 {
 	delete[] tab;
+    delete[] speed1;
+    delete[] speed2;
+    delete[] speed3;
+    delete[] speed4;
 }
 
 // ===========================================================================
@@ -68,10 +77,8 @@ void boids::initialization(void)
 	tab = new individue[Get_population()];
 }
 
-double* boids::rule1(int ind)
+void boids::rule1(int ind, int* around)
 {
-	int* around = detection(ind,Get_disti()); //tableau for around people
-
 	double vx = tab[ind].Get_vx();
 	double vy = tab[ind].Get_vy();
 
@@ -83,20 +90,12 @@ double* boids::rule1(int ind)
 		vy += (tab[a].Get_vy() - vy);
 	}
 
-    double* speed =new double[2];
-
-	speed[0] = vx/around[0];
-	speed[1] = vy/around[0];
-
-	delete[] around;
-
-    return speed;
+	speed1[0] = vx/around[0];
+	speed1[1] = vy/around[0];
 }
 
-double* boids::rule2(int ind)
+void boids::rule2(int ind, int* around)
 {
-	int* around = detection(ind,Get_disti()); //tableau for around people
-
 	double vx = tab[ind].Get_vx();
 	double vy = tab[ind].Get_vy();
 
@@ -108,42 +107,28 @@ double* boids::rule2(int ind)
 		vy += (tab[a].Get_y() - vy);
 	}
 
-    double* speed = new double[2];
-
-	speed[0] = vx/around[0];
-	speed[1] = vy/around[0];
-
-	delete[] around;
-
-    return speed;
+	speed2[0] = vx/around[0];
+	speed2[1] = vy/around[0];
 }
 
-double* boids::rule3(int ind)
+void boids::rule3(int ind, int* around1, int* object_around)
 {
-    int* around = detection(ind,Get_distc()); //tableau for around people
-
     double vx = tab[ind].Get_vx();
     double vy = tab[ind].Get_vy();
 
-    for (int i = 0; i < around[0]; ++i)
+    for (int i = 0; i < around1[0]; ++i)
     {
-        int a = around[i+1];
+        int a = around1[i+1];
 
         vx += (tab[a].Get_x() - vx);
         vy += (tab[a].Get_y() - vy);
     }
 
-    double* speed = new double[2];
-
-    speed[0] = vx/around[0];
-    speed[1] = vy/around[0];
-
-    delete[] around;
-
-    return speed;
+    speed3[0] = vx/around1[0];
+    speed3[1] = vy/around1[0];
 }
 
-double* boids::rule4(int ind)
+void boids::rule4(int ind, int* around)
 {
     
 }
@@ -159,9 +144,11 @@ void boids::deplacement(void)
         double x = tab[i].Get_x() + dt*tab[i].Get_vx();
         double y = tab[i].Get_y() + dt*tab[i].Get_vy();
 
-        double* speed1 = rule1(i);
-        double* speed2 = rule2(i);
-        double* speed3 = rule3(i);
+        int* around = detection(i, disti);
+        int* around1 = detection(i, disto);
+
+        //rule 1
+        
 
         double vx = tab[i].Get_vx() + dt*(g1*speed1[0]+g2*speed2[0]+g3*speed3[0]);  //for change the x
         double vy = tab[i].Get_vy() + dt*(g1*speed1[1]+g2*speed2[1]+g3*speed3[1]);  //for change the y
@@ -181,9 +168,8 @@ void boids::deplacement(void)
         tab[i].Set_vx(vx);
         tab[i].Set_vy(vy);
 
-        delete[] speed1;
-        delete[] speed2;
-        delete[] speed3;
+        delete[] around;
+        delete[] around1;
     }
     
 }

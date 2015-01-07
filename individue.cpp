@@ -43,11 +43,11 @@ individue::individue(void)
 
     speed_limit = 0.0001;
     
-	x = Get_width() * ( (double)rand() / (double)RAND_MAX );
-	y = Get_height() * ( (double)rand() / (double)RAND_MAX );
+	x = width * ( (double)rand() / (double)RAND_MAX );
+	y = height * ( (double)rand() / (double)RAND_MAX );
 
-	vx = 2*Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - Get_speed_limit();
-	vy = 2*Get_speed_limit() * ( (double)rand() / (double)RAND_MAX ) - Get_speed_limit();
+	vx = 2*speed_limit * ( (double)rand() / (double)RAND_MAX ) - speed_limit;
+	vy = 2*speed_limit * ( (double)rand() / (double)RAND_MAX ) - speed_limit;
 }
 
 // ===========================================================================

@@ -79,10 +79,10 @@ class boids
     // =======================================================================
     //                              Public Methods
     // =======================================================================
-    double* rule1(int ind);
-    double* rule2(int ind);
-    double* rule3(int ind);
-    double* rule4(int ind);
+    void rule1(int ind, int* around);
+    void rule2(int ind, int* around);
+    void rule3(int ind, int* around1, int* object_around);
+    void rule4(int ind, int* around);
     
     void deplacement(void);
 
@@ -135,6 +135,10 @@ class boids
     double g2; //gamma 2
     double g3; //gamma 3
 
+    double* speed1;
+    double* speed2;
+    double* speed3;
+    double* speed4;
 };
 
 
