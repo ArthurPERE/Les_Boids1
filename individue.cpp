@@ -41,13 +41,13 @@ individue::individue(void)
 	width = 700;
     height = 700;
 
-    speed_limit = 1;
+    speed_init = 100.;
     
-	x = (width-20) * ( (double)rand() / (double)RAND_MAX )+20;
-	y = (height-20) * ( (double)rand() / (double)RAND_MAX )+20;
+	x = (width-20)*((double)rand()/(double)RAND_MAX)+20;
+	y = (height-20)*((double)rand()/(double)RAND_MAX)+20;
 
-	vx = 2*speed_limit * ( (double)rand() / (double)RAND_MAX ) - speed_limit;
-	vy = 2*speed_limit * ( (double)rand() / (double)RAND_MAX ) - speed_limit;
+	vx = 2*speed_init*((double)rand()/(double)RAND_MAX)-speed_init;
+	vy = 2*speed_init*((double)rand()/(double)RAND_MAX)-speed_init;
 }
 
 // ===========================================================================

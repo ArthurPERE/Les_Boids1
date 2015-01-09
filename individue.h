@@ -60,7 +60,7 @@ class individue
     inline int Get_width(void) const;
     inline int Get_height(void) const;
 
-    inline double Get_speed_limit(void) const;
+    inline double Get_speed_init(void) const;
 
     inline double Get_vx(void) const;
     inline double Get_vy(void) const;
@@ -73,7 +73,7 @@ class individue
     inline void Set_width(int w);
     inline void Set_height(int h);
 
-    inline void Set_speed_limit(double sl);
+    inline void Set_speed_init(double sl);
 
     inline void Set_vx(double vx1);
     inline void Set_vy(double vy1);
@@ -124,7 +124,7 @@ class individue
     double vx;  //speed x coordonate of i
     double vy;  //speed x coordonate of i
 
-    double speed_limit;
+    double speed_init;
 
     int width;
     int height;
@@ -144,7 +144,7 @@ inline double individue::Get_vy(void) const {return vy;}
 inline int individue::Get_width(void) const {return width;}
 inline int individue::Get_height(void) const {return height;}
 
-inline double individue::Get_speed_limit(void) const {return speed_limit;}
+inline double individue::Get_speed_init(void) const {return speed_init;}
 // ===========================================================================
 //                              Setters' definitions
 // ===========================================================================
@@ -158,7 +158,7 @@ inline void individue::Set_vy(double vy1){vy=vy1;}
 inline void individue::Set_width(int w) {width = w;}
 inline void individue::Set_height(int h) {height = h;}
 
-inline void individue::Set_speed_limit(double sl){speed_limit = sl;}
+inline void individue::Set_speed_init(double sl){speed_init = sl;}
 // ===========================================================================
 //                             Operators' definitions
 // ===========================================================================
