@@ -77,8 +77,6 @@ class boids
 
     void deplacement(void);
 
-    double val_abs(double);
-
 
 
   protected :

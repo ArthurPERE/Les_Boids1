@@ -45,23 +45,29 @@ int main(int argc, char* argv[])
     boids Boids = boids();
     individue Individue = individue();
 
-    Boids.Set_dt(0.1);
+    Boids.Set_dt(0.001);
 
     Boids.Set_population(10);
 
-    Boids.Set_disti(200);
-    Boids.Set_distc(30);
+    Boids.Set_disti(500);
+    Boids.Set_distc(100);
+    Boids.Set_distp(400);
+    Boids.Set_distk(10);
 
-    Boids.Set_g1(5);
-    Boids.Set_g2(4);
-    Boids.Set_g3(3);
+    Boids.Set_g1(900);
+    Boids.Set_g2(1);
+    Boids.Set_g3(1000);
+    Boids.Set_g4(200);
 
     Boids.Set_nb_object(5);
 
-    Boids.Set_width(700);
-    Boids.Set_height(700);
+    Boids.Set_width(500);
+    Boids.Set_height(500);
 
     Boids.Set_speed_init(10);
+
+    Boids.Set_nb_predator(5);
+    Boids.Set_speed_predator(10);
 
     int w = Boids.Get_width();
     int h = Boids.Get_height();
@@ -72,8 +78,13 @@ int main(int argc, char* argv[])
     win.map();
     Boids.initialization();
     int pop = Boids.Get_population(); 
+
     int nbo = Boids.Get_nb_object();
     double* tabo = Boids.Get_tab_object();
+
+    individue* tabp = Boids.Get_predator();
+    int nbp = Boids.Get_nb_predator();
+
     individue* tab = Boids.Get_tab();
 
     // for (int i = 0; i < pop; ++i)
@@ -118,8 +129,17 @@ int main(int argc, char* argv[])
             double x = tab[i].Get_x();
             double y = tab[i].Get_y();
 
-            win.draw_fsquare(-2+x,-2+y,2+x,2+y,0xFF00);
+            win.draw_fsquare(-2+x,-2+y,2+x,2+y,0xFF0000);
         }
+
+        for (int i = 0; i < nbp; ++i)
+        {
+            double x = tabp[i].Get_x();
+            double y = tabp[i].Get_y();
+
+            win.draw_fsquare(-2+x,-2+y,2+x,2+y,0x00FF00);
+        }
+
         Boids.deplacement();
         usleep(10000);
         
