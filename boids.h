@@ -1,11 +1,3 @@
-//****************************************************************************
-//
-//
-//
-//****************************************************************************
-
-
-
 #ifndef __BOIDS_H__
 #define __BOIDS_H__
 
@@ -23,22 +15,11 @@
 // ===========================================================================
 #include "individue.h"
 
-// ===========================================================================
-//                              Class declarations
-// ===========================================================================
-
-
-
-
 
 
 class boids
 {
   public :
-    
-    // =======================================================================
-    //                                 Enums
-    // =======================================================================
     
     // =======================================================================
     //                               Constructors
@@ -56,12 +37,14 @@ class boids
     inline int Get_population(void) const;
     inline individue* Get_tab(void) const;
 
-    inline double Get_disti(void) const;
-    inline double Get_distc(void) const;
-
     inline int Get_nb_object(void) const;
+    inline double* Get_tab_object(void) const;
 
-    inline int* Get_around(void) const;
+    inline int Get_nb_predator(void) const;
+    inline individue* Get_predator(void) const;
+
+    inline int Get_width(void) const;
+    inline int Get_height(void) const;
     // =======================================================================
     //                            Accessors: setters
     // =======================================================================
@@ -70,51 +53,35 @@ class boids
 
     inline void Set_disti(double di);
     inline void Set_distc(double di);
+    inline void Set_distp(double dp);
+    inline void Set_distk(double di);
 
     inline void Set_g1(double g);
     inline void Set_g2(double g);
     inline void Set_g3(double g);
+    inline void Set_g4(double g);
 
     inline void Set_nb_object(int nb);
-    // =======================================================================
-    //                                Operators
-    // =======================================================================
 
+    inline void Set_nb_predator(int nb);
+    inline void Set_speed_predator(double vp);
+
+    inline void Set_width(int w);
+    inline void Set_height(int h);
+
+    inline void Set_speed_init(double sl);
     // =======================================================================
     //                              Public Methods
     // =======================================================================
-    void deplacement(void);
-
     void initialization(void);
 
-    void detection(int ind); //for detinline int* Get_around(void) const;ecte the individue around ind
-    // =======================================================================
-    //                             Public Attributes
-    // =======================================================================
+    void deplacement(void);
 
+    double val_abs(double);
 
 
 
   protected :
-
-    // =======================================================================
-    //                            Forbidden Constructors
-    // =======================================================================
-    /*boids(void)
-    {
-      printf("%s:%d: error: call to forbidden constructor.\n", __FILE__, __LINE__);
-      exit(EXIT_FAILURE);
-    };
-    boids(const boids &model)
-    {
-      printf("%s:%d: error: call to forbidden constructor.\n", __FILE__, __LINE__);
-      exit(EXIT_FAILURE);
-    };*/
-
-
-    // =======================================================================
-    //                              Protected Methods
-    // =======================================================================
 
     // =======================================================================
     //                             Protected Attributes
@@ -123,30 +90,37 @@ class boids
 
     individue Individue;
     individue* tab;
+
     double* Getter;
 
     int population; //number total of individue
 
     double disti; //the distance of individue
     double distc; //the distance of contact
+    double distp; //the distance of seeing a prey for a predator
+    double distk; //the distance of kill the prey
 
     double g1; //gamma 1
     double g2; //gamma 2
     double g3; //gamma 3
+    double g4; //gamma 4
 
-    double* speed1;
-    double* speed2;
-    double* speed3i;  //speed 3 for individue
-    double* speed3o;  //speed 3 for object
-    double* speed4;
-
-    int* around;
+    double* speed;
+    double speed_predator;
 
     double* tab_object;  //tab of coordonate of object
     int nb_object;
 
     int w;  //widht
     int h;  //height
+
+    individue* predator;
+    int nb_predator;
+
+    double speed_init;
+
+    int width;
+    int height;
     
 };
 
@@ -157,12 +131,14 @@ class boids
 inline individue* boids::Get_tab(void) const{return tab;}
 inline int boids::Get_population(void) const {return population;}
 
-inline double boids::Get_disti(void) const{return disti;}
-inline double boids::Get_distc(void) const{return distc;}
-
 inline int boids::Get_nb_object(void) const{return nb_object;}
+inline double* boids::Get_tab_object(void) const {return tab_object;}
 
-inline int* boids::Get_around(void) const{return around;}
+inline int boids::Get_nb_predator(void) const {return nb_predator;}
+inline individue* boids::Get_predator(void) const {return predator;}
+
+inline int boids::Get_width(void) const {return width;}
+inline int boids::Get_height(void) const {return height;}
 // ===========================================================================
 //                              Setters' definitions
 // ===========================================================================
@@ -170,22 +146,25 @@ inline void boids::Set_dt(double dtt) {dt = dtt;}
 
 inline void boids::Set_population(int n){population = n;}
 
-inline void boids::Set_disti(double di){disti=di;}
-inline void boids::Set_distc(double di){distc=di;}
+inline void boids::Set_disti(double di){disti = di;}
+inline void boids::Set_distc(double di){distc = di;}
+inline void boids::Set_distp(double dp){distp = dp;}
+inline void boids::Set_distk(double di){distk = di;}
 
 inline void boids::Set_g1(double g){g1 = g;}
 inline void boids::Set_g2(double g){g2 = g;}
 inline void boids::Set_g3(double g){g3 = g;}
+inline void boids::Set_g4(double g){g4 = g;}
 
-inline void boids::Set_nb_object(int nb){nb_object=nb;}
-// ===========================================================================
-//                             Operators' definitions
-// ===========================================================================
+inline void boids::Set_nb_object(int nb){nb_object = nb;}
 
-// ===========================================================================
-//                          Inline functions' definition
-// ===========================================================================
+inline void boids::Set_nb_predator(int nb){nb_predator = nb;}
+inline void boids::Set_speed_predator(double vp){speed_predator = vp;}
+
+inline void boids::Set_width(int w) {width = w;}
+inline void boids::Set_height(int h) {height = h;}
+
+inline void boids::Set_speed_init(double sl){speed_init = sl;}
 
 
 #endif // __BOIDS_H__
-

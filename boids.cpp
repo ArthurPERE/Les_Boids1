@@ -1,26 +1,14 @@
-//****************************************************************************
-//
-//
-//
-//****************************************************************************
-
-
- 
- 
 // ===========================================================================
 //                                   Libraries
 // ===========================================================================
 #include <cstdio>
 #include <cstdlib>
-#include <algorithm>
+#include <cmath>
 
 // ===========================================================================
 //                                 Project Files
 // ===========================================================================
 #include "boids.h"
-
-
-
 
 
 //############################################################################
@@ -30,10 +18,6 @@
 //############################################################################
 
 // ===========================================================================
-//                         Definition of static attributes
-// ===========================================================================
-
-// ===========================================================================
 //                                  Constructors
 // ===========================================================================
 boids::boids(void)
@@ -41,24 +25,35 @@ boids::boids(void)
 	dt = 0;
 	population = 0;
 	
-    
+    tab=NULL;
+    predator=NULL;
+    tab_object=NULL;
+    Getter=NULL;    
+
     disti = 0;
     distc = 0;
+    distp = 0;
+    distk = 0;
 
     g1 = 0;
     g2 = 0;
     g3 = 0;
+    g4 = 0;
 
-    speed1 = new double[2];
-    speed2 = new double[2];
-    speed3i = new double[2];
-    speed3o = new double[2];
-    speed4 = new double[2];
+    speed = new double[10];
 
     nb_object = 0;
 
     w=0;
     h=0;
+
+    nb_predator = 0;
+    speed_predator = 0;
+
+    width = 0;
+    height = 0;
+
+    speed_init = 0;
 }
 
 // ===========================================================================
@@ -66,16 +61,13 @@ boids::boids(void)
 // ===========================================================================
 boids::~boids(void)
 {
-	delete[] tab;
+	delete [] tab;
 
-    delete[] speed1;
-    delete[] speed2;
-    delete[] speed3i;
-    delete[] speed3o;
-    delete[] speed4;
+    delete [] speed;
 
-    delete[] around;
-    delete[] Getter;
+    delete [] Getter;
+
+    delete [] predator;
 }
 
 // ===========================================================================
@@ -84,20 +76,36 @@ boids::~boids(void)
 
 void boids::initialization(void)
 {
+    //for the birds
 	tab = new individue[population];
-    around = new int[2*population+2*nb_object];
+    for (int i = 0; i < population; ++i)
+    {
+        tab[i].Set_x( ((width-100)-100)*((double)rand()/(double)RAND_MAX)+100 );
+        tab[i].Set_y( ((height-100)-100)*((double)rand()/(double)RAND_MAX)+100 );
+
+        tab[i].Set_vx(2*speed_init*((double)rand()/(double)RAND_MAX)-speed_init);
+        tab[i].Set_vy(2*speed_init*((double)rand()/(double)RAND_MAX)-speed_init);
+    }
+
+
+    //for the predator
+    predator = new individue[nb_predator];
+    for (int i = 0; i < nb_predator; ++i)
+    {
+        predator[i].Set_x( ((width-100)-100)*((double)rand()/(double)RAND_MAX)+100 );
+        predator[i].Set_y( ((height-100)-100)*((double)rand()/(double)RAND_MAX)+100 );
+    }
+
+
     Getter = new double[4*population];
 
     //set the object
-    tab_object = new double[nb_object];
+    tab_object = new double[2*nb_object];
 
-    w = Individue.Get_width();
-    h = Individue.Get_height();
-
-    for (int i = 0; i < nb_object; i+=2)
+    for (int i = 0; i < 2*nb_object; i+=2)
     {
-        tab_object[i] = (w-20)*((double)rand()/(double)RAND_MAX)+20; //for x coordonate
-        tab_object[i+1] = (h-20)*((double)rand()/(double)RAND_MAX)+20; //for y coordonate
+        tab_object[i] = ((width-20)-20)*((double)rand()/(double)RAND_MAX)+20; //for x coordonate
+        tab_object[i+1] = ((height-20)-20)*((double)rand()/(double)RAND_MAX)+20; //for y coordonate
     }
 }
 
@@ -106,107 +114,215 @@ void boids::deplacement(void)
 {
 for (int ind=0; ind<population; ind++)
 {
-    double vx = tab[ind].Get_vx();
-    double vy = tab[ind].Get_vy();
     double x = tab[ind].Get_x();
     double y = tab[ind].Get_y();
+    double vx = tab[ind].Get_vx();
+    double vy = tab[ind].Get_vy();
 
-    double xf = x + dt * vx;
-    double yf = y + dt * vy;
+    //for change the x, y
+    Getter[4*ind] = x + dt * vx;
+    Getter[4*ind+1] = y + dt * vy;
 
-    detection(ind);
-
-    int ci = around[0];  //compteuri
-    int cc = around[ci+1];  //compteurc
-    int co = around[cc+ci+3];  //compteuro
+    int ci = 0;  //compteur individue around
+    int cc = 0;  //compteur individue too close
+    int co = 0;  //compteur object too close
 
     //for initialize every rule
-    speed1[0] = 0;
-    speed1[1] = 0;
+    speed[0] = 0;  //for vx from rule 1
+    speed[1] = 0;  //for vy from rule 1
 
-    speed2[0] = 0;
-    speed2[1] = 0;
+    speed[2] = 0;  //for vx from rule 2
+    speed[3] = 0;  //for vy from rule 2
 
-    speed3i[0] = 0;
-    speed3i[1] = 0;
+    speed[4] = 0;  //for vx from rule 3 inter individue
+    speed[5] = 0;  //for vy from rule 3 inter individue
 
-    speed3o[0] = 0;
-    speed3o[1] = 0;
+    speed[6] = 0;  //for vx from rule 3 object
+    speed[7] = 0;  //for vy from rule 3 object
+
+    speed[8] = 0;  //for vx from rule 4
+    speed[9] = 0;  //for vy from rule 4
 
 
-    // for the rule
-    for (int i = 0; i < ci+cc+co; ++i)
+    // for the rules
+    for (int i = 0; i < population; ++i)
     {
-        if (i<ci)
-        {
-            int a = around[i+1];
+        double x_other = tab[i].Get_x();
+        double y_other = tab[i].Get_y();
 
+        double a = sqrt((x - x_other)*(x - x_other) + (y - y_other)*(y - y_other)); //distance between 2 individue
+        
+        if (a<=disti  && a>0)
+        {
             //rule 1
-            speed1[0] += (tab[a].Get_vx() - vx);
-            speed1[1] += (tab[a].Get_vy() - vy);
+            speed[0] += (tab[i].Get_vx() - vx);
+            speed[1] += (tab[i].Get_vy() - vy);
 
             //rule 2
-            speed2[0] += (tab[a].Get_x() - x);
-            speed2[1] += (tab[a].Get_y() - y);
+            speed[2] += (x_other - x);
+            speed[3] += (y_other - y);
+
+            ci++;
         }
         
-
         //rule 3
-        if (i < cc)
+        if (a<=distc  && a>0)
         {
-            int b = around[ci+2+i];
+            speed[4] += (x_other - x);
+            speed[5] += (y_other - y);
 
-            speed3i[0] += (tab[b].Get_x() - x);
-            speed3i[1] += (tab[b].Get_y() - y);
+            cc++;
         }
 
-        if (i<co)
+        if (i<nb_object)
         {
-            int c = around[cc+ci+4+i];
-            speed3o[0] += (tab_object[c] -x);
-            speed3o[1] += (tab_object[c+1] -y);
+            double xo = tab_object[2*i];
+            double yo = tab_object[2*i+1];
+            a = sqrt((x - xo)*(x - xo) + (y - yo)*(y - yo));
+            
+            if (a<=distc)
+            {
+                speed[6] += (xo - x);
+                speed[7] += (yo - y);
+                co++;
+            }
         }
+
+        //rule 4
+        if (i<nb_predator)
+        {
+            double xp = predator[i].Get_x();
+            double yp = predator[i].Get_y();
+
+            a = sqrt((x - xp)*(x - xp)+(y - yp)*(y - yp));
+
+            speed[8] = - (xp - x)/a;
+            speed[9] = - (yp - y)/a;
+        }
+        
     }
+
 
     if (ci!=0)
     {
-        speed1[0] = speed1[0]/ci;
-        speed1[1] = speed1[1]/ci;
+        speed[0] = speed[0]/ci;
+        speed[1] = speed[1]/ci;
 
-        speed2[0] = speed2[0]/ci; 
-        speed2[1] = speed2[1]/ci;
+        speed[2] = speed[2]/ci; 
+        speed[3] = speed[3]/ci;
     }    
     
     if (cc!=0)
     {
-        speed3i[0] =  - speed3i[0]/cc; 
-        speed3i[1] =  - speed3i[1]/cc;
+        speed[4] =  - speed[4]/cc; 
+        speed[5] =  - speed[5]/cc;
     }
 
     if (co!=0)
     {
-        speed3o[0] = - speed3o[0]/co; 
-        speed3o[1] = - speed3o[1]/co;
+        speed[6] = - speed[6]/co; 
+        speed[7] = - speed[7]/co;
     }
 
 
     //==================================================================
 
-    vx = vx + dt*(g1*speed1[0]+g2*speed2[0]+g3*(speed3i[0]+speed3o[0]));  //for change the vx
-    vy = vy + dt*(g1*speed1[1]+g2*speed2[1]+g3*(speed3i[1]+speed3o[1]));  //for change the vy   
+    vx = vx + dt*(g1*speed[0]+g2*speed[2]+g3*(speed[4]+speed[6])+g4*speed[8]);  //for change the vx
+    vy = vy + dt*(g1*speed[1]+g2*speed[3]+g3*(speed[5]+speed[7])+g4*speed[9]);  //for change the vy   
 
     // for the wind
     if (x<100) {vx = vx +200;}
-    if (x > w-100) {vx = vx - 200;}
+    if (x > width-100) {vx = vx - 200;}
     if (y<100) {vy = vy +200;}
-    if (y > h-100) {vy = vy -200;}
+    if (y > height-100) {vy = vy -200;}
 
-    //for the Getter because if no getter the value of x, y , vx, vy change at the end of the loop
-    Getter[4*ind] = xf;
-    Getter[4*ind+1] = yf;
+    //for the Getter because if no getter the value of vx, vy change at the end of the loop
     Getter[4*ind+2] = vx;
     Getter[4*ind+3] = vy; 
 }
+
+//for mouvement of predators
+// for (int i = 0; i < nb_predator; ++i)
+// {
+//     double xp = predator[i].Get_x();
+//     double yp = predator[i].Get_y();
+
+//     double tableau[population];
+
+//     bool eat = 0;
+
+//     //for see the distance of the prey
+//     for (int ind = 0; ind < population; ++ind)
+//     {
+//         double x_prey = tab[ind].Get_x();
+//         double y_prey = tab[ind].Get_y();
+
+//         double a = sqrt((xp - x_prey)*(xp - x_prey)+(yp - y_prey)*(yp - y_prey));
+
+//         if (a<=distp && a>distk)
+//         {
+//             tableau[ind] = a;
+//         }
+//         else if (a>distp)
+//         {
+//             tableau[ind] = -1;
+//         }
+//         else if (a<=distk)
+//         {
+//             tab[ind] = NULL;
+//             eat = 1;
+//         }
+//     }
+
+
+//     if (eat=0)
+//     {
+//         predator[i].Set_x(xp + dt*predator[i].Get_vx());
+//         predator[i].Set_y(yp + dt*predator[i].Get_vy());
+
+//         // for find the prey closer than the others
+//         double min = tableau[0];
+//         int prey = -1;
+
+//         for (int ind = 1; ind < population; ++ind)
+//         {
+//             if (tableau[ind] < min && tableau[ind]>0)
+//             {
+//             prey = ind;
+//             min = tableau[ind];
+//             }
+//         }
+
+//         // for the wind
+//         int vx = 0;
+//         int vy = 0;
+
+//         if (xp<100) {vx = 200;} else { vx = 0;}
+//         if (xp>w-100) {vx = - 200;}
+//         if (yp<100) {vy = 200;} else { vy = 0;}
+//         if (yp>h-100) {vy = - 200;}
+
+//         // for the speed of the predator
+//         if (prey>=0)
+//         {
+//             predator[i].Set_vx((xp - tab[prey].Get_x())*speed_predator/min + vx);
+//             predator[i].Set_vy((yp - tab[prey].Get_y())*speed_predator/min + vy);
+//         }
+//         else
+//         {
+//             double x = w*((double)rand()/(double)RAND_MAX);
+//             double y = h*((double)rand()/(double)RAND_MAX);
+
+//             predator[i].Set_vx((xp - x)*speed_predator/min + vx);
+//             predator[i].Set_vy((yp - y)*speed_predator/min + vy);
+//         }
+//     }
+//     else if (eat = 1)
+//     {
+//         break;
+//     }
+// }
+
 
 for (int i = 0; i < population; ++i)
 {
@@ -217,104 +333,3 @@ for (int i = 0; i < population; ++i)
 }
 
 }
-
-
-void boids::detection(int ind)  //for detecte the individue around
-{
-    int compteuri = 0;  //for compte the individue around in the distance dist
-    int compteurc = 0;  //for compte the individue around in the distance dist
-    int compteuro = 0;  //for compte the object around in the distance dist
-
-    int tableaui[population];  // tableau of inter individue
-    int tableauc[population];  //tableau of contact of individue
-    int tableauo[nb_object];
-
-    double xpos = tab[ind].Get_x();  //for performance reason
-    double ypos = tab[ind].Get_y();  //for performance reason
-    
-    //for the population
-    for (int i=0; i<population; i++)
-    {
-        double a = (xpos-tab[i].Get_x())*(xpos-tab[i].Get_x()) + (ypos-tab[ind].Get_y())*(ypos-tab[ind].Get_y()); //distance between 2 individue
-        
-        if (a<=disti*disti  && a>0)
-        {
-            tableaui[i] = i;
-            compteuri++;
-        }
-        else
-        {
-            tableaui[i] = population+12;  //for if i=0 respond to the critere of the if
-        }
-        
-
-        if (a<=distc*distc  && a>0)
-        {
-            tableauc[i] = i;
-            compteurc++;
-        }
-        else
-        {
-            tableauc[i] = population+12;  //for if i=0 respond to the critere of the if
-        }
-
-    }
-    
-    //for the object
-    for (int i = 0; i < nb_object; i+=2)
-    {
-        double a = (xpos-tab_object[i])*(xpos-tab_object[i]) + (ypos-tab_object[i+1])*(ypos-tab_object[i+1]);
-
-        if (a<=distc*distc)
-        {
-            tableauo[i] = i;
-            compteuro++;
-        }
-        else
-        {
-            tableauo[i] = nb_object+12;  //for if i=0 respond to the critere of the if
-        }
-    }
-
-
-    //fill the tableau around
-    int a = 1;
-    int b = 1;
-    int c = 1;
-
-    for (int i=0; i<population; i++)
-    {
-        if (tableaui[i]<=population)
-        {
-            around[a] = i;
-            a++;
-        }
-
-        if (tableauc[i]<=population)
-        {
-            around[b+1+compteuri] = i;
-            b++;
-        }
-    }
-
-    for (int i = 0; i < nb_object; i+=2)
-    {
-        if (tableauo[i]<=nb_object)
-        {
-            around[c+3+compteurc+compteuri] = i;
-            c++;
-        }
-    }
-
-    around[0] = compteuri; //for have how many content around have for the for boucle in the function rule
-    around[compteuri+1] = compteurc;
-    around[compteuri+compteurc+3] = compteuro;
-}
-
-// ===========================================================================
-//                                Protected Methods
-// ===========================================================================
-
-// ===========================================================================
-//                               Non inline accessors
-// ===========================================================================
