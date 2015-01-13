@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <ctime>
 
 // ===========================================================================
 //                                 Project Files
@@ -29,7 +30,7 @@ boids::boids(void)
     predator=NULL;
     tab_object=NULL;
     Getter=NULL;    
-
+(double)rand()/(double)RAND_MAX;
     disti = 0;
     distc = 0;
     distp = 0;
@@ -54,6 +55,11 @@ boids::boids(void)
     height = 0;
 
     speed_init = 0;
+
+    found_no_prey = 0;
+
+    x_alea = 0;
+    y_alea = 0;
 }
 
 // ===========================================================================
@@ -104,8 +110,8 @@ void boids::initialization(void)
 
     for (int i = 0; i < 2*nb_object; i+=2)
     {
-        tab_object[i] = ((width-20)-20)*((double)rand()/(double)RAND_MAX)+20; //for x coordonate
-        tab_object[i+1] = ((height-20)-20)*((double)rand()/(double)RAND_MAX)+20; //for y coordonate
+        tab_object[i] = ((width-100)-100)*((double)rand()/(double)RAND_MAX)+100; //for x coordonate
+        tab_object[i+1] = ((height-100)-100)*((double)rand()/(double)RAND_MAX)+100; //for y coordonate
     }
 }
 
@@ -169,7 +175,6 @@ for (int ind=0; ind<population; ind++)
         {
             speed[4] += (x_other - x);
             speed[5] += (y_other - y);
-
             cc++;
         }
 
@@ -230,10 +235,10 @@ for (int ind=0; ind<population; ind++)
     vy = vy + dt*(g1*speed[1]+g2*speed[3]+g3*(speed[5]+speed[7])+g4*speed[9]);  //for change the vy
 
     // for the wind
-    if (x<100) {vx = vx +200;}
-    if (x > width-100) {vx = vx - 200;}
-    if (y<100) {vy = vy +200;}
-    if (y > height-100) {vy = vy -200;}
+    if (x<50) {vx = vx +100;}
+    if (x > width - 50) {vx = vx - 100;}
+    if (y<50) {vy = vy +100;}
+    if (y > height - 50) {vy = vy -100;}
 
     //for the Getter because if no getter the value of vx, vy change at the end of the loop
     Getter[4*ind+2] = vx;
@@ -243,89 +248,56 @@ for (int ind=0; ind<population; ind++)
 //for mouvement of predators
 for (int i = 0; i < nb_predator; ++i)
 {
-    double xp = predator[i].Get_x();
-    double yp = predator[i].Get_y();
+    double x_pred = predator[i].Get_x();
+    double y_pred = predator[i].Get_y();
 
-    double tableau[population];
+    double min = distp+1; // +1 for the case a = distp, min for find the distance min in the radius of the sight of this predator
+    int prey = population+1; // for numero of the prey
 
-    //bool eat = 0;
-
-    //for see the distance of the prey
-    for (int ind = 0; ind < population; ++ind)
+    // find the next prey
+    for (int pop = 0; pop < population; ++pop)
     {
-        double x_prey = tab[ind].Get_x();
-        double y_prey = tab[ind].Get_y();
-
-        double a = sqrt((xp - x_prey)*(xp - x_prey)+(yp - y_prey)*(yp - y_prey));
-
-        if (a<=distp && a>distk)
+        double a = sqrt((x_pred - tab[pop].Get_x())*(x_pred - tab[pop].Get_x())+(y_pred - tab[pop].Get_y())*(y_pred - tab[pop].Get_y()));
+    
+        if (a<=distp && a<min)
         {
-            tableau[ind] = a;
+            prey = pop;  
+            min = a;
         }
-        else if (a>distp)
-        {
-            tableau[ind] = -1;
-        }
-        // else if (a<=distk)
-        // {
-        //     tab[ind] = NULL;
-        //     eat = 1;
-        // }
+
     }
 
+    if (min <= distp && min > distk)
+    {
+        predator[i].Set_x(x_pred + dt*predator[i].Get_vx());
+        predator[i].Set_y(x_pred + dt*predator[i].Get_vy());
 
-    //if (eat=0)
-    //{
-        predator[i].Set_x(xp + dt*predator[i].Get_vx());
-        predator[i].Set_y(yp + dt*predator[i].Get_vy());
+        predator[i].Set_vx((tab[prey].Get_x() - x_pred)*speed_predator/min);
+        predator[i].Set_vy((tab[prey].Get_y() - y_pred)*speed_predator/min);
 
-        // for find the prey closer than the others
-        double min = tableau[0];
-        int prey = -1;
+        found_no_prey = 0;
+    }
 
-        for (int ind = 1; ind < population; ++ind)
+    if (min > distp)
+    {
+        predator[i].Set_x(x_pred + dt*predator[i].Get_vx());
+        predator[i].Set_y(x_pred + dt*predator[i].Get_vy());
+
+        if (found_no_prey=0)
         {
-            if (tableau[ind] < min && tableau[ind]>0)
-            {
-                prey = ind;
-                min = tableau[ind];
-            }
+            srand(time(NULL));
+
+            x_alea = width*(double)rand()/(double)RAND_MAX;
+            y_alea = height*(double)rand()/(double)RAND_MAX;
+
+            double d = sqrt((predator[i].Get_x() - x_alea)*(predator[i].Get_x() - x_alea)+(y_alea - predator[i].Get_y())*(y_alea - predator[i].Get_x()));
+
+            predator[i].Set_vx((x_alea - x_pred)*speed_predator/d);
+            predator[i].Set_vy((y_alea - y_pred)*speed_predator/d);
+
+            found_no_prey = 1;
         }
-
-        // for the wind
-        int vx = 0;
-        int vy = 0;
-
-
-
-        // for the speed of the predator
-        if (prey>=0)
-        {
-            double vx = (xp - tab[prey].Get_x())*speed_predator/min;
-            double vy = (yp - tab[prey].Get_y())*speed_predator/min;
-
-            printf("%lg\n", tab[prey].Get_x());
-
-            predator[i].Set_vx(vx);
-            predator[i].Set_vy(vy);
-
-        }
-        else
-        {
-            double x = w*((double)rand()/(double)RAND_MAX);
-            double y = h*((double)rand()/(double)RAND_MAX);
-
-            double vx = (xp - x)*speed_predator/min + vx;
-            double vy = (yp - y)*speed_predator/min + vy;
-
-            predator[i].Set_vx(vx);
-            predator[i].Set_vy(vy);
-        }
-    //}
-    //else if (eat = 1)
-    //{
-    //    break;
-    //}
+    }
 }
 
 

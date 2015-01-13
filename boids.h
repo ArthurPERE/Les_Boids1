@@ -119,6 +119,11 @@ class boids
 
     int width;
     int height;
+
+    bool found_no_prey; // for choose a direction and stay at that direction
+
+    double x_alea;
+    double y_alea;
     
 };
 

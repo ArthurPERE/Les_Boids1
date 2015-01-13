@@ -47,26 +47,26 @@ int main(int argc, char* argv[])
 
     Boids.Set_dt(0.001);
 
-    Boids.Set_population(10);
+    Boids.Set_population(100);
 
-    Boids.Set_disti(500);
-    Boids.Set_distc(100);
-    Boids.Set_distp(400);
-    Boids.Set_distk(10);
+    Boids.Set_disti(60);
+    Boids.Set_distc(10);
+    Boids.Set_distp(40);
+    Boids.Set_distk(0);
 
-    Boids.Set_g1(900);
+    Boids.Set_g1(5);
     Boids.Set_g2(1);
-    Boids.Set_g3(1000);
-    Boids.Set_g4(200);
+    Boids.Set_g3(35);
+    Boids.Set_g4(4);
 
-    Boids.Set_nb_object(5);
+    Boids.Set_nb_object(10);
 
-    Boids.Set_width(500);
-    Boids.Set_height(500);
+    Boids.Set_width(700);
+    Boids.Set_height(700);
 
     Boids.Set_speed_init(10);
 
-    Boids.Set_nb_predator(5);
+    Boids.Set_nb_predator(1);
     Boids.Set_speed_predator(10);
 
     int w = Boids.Get_width();
@@ -119,9 +119,9 @@ int main(int argc, char* argv[])
         }
 
         win.draw_fsquare(0,0,w,h,0xFFFFFF);
-        for (int i = 0; i < 2*nbo; i+=2)
+        for (int i = 0; i < nbo; i++)
         {
-            win.draw_fsquare(-4+tabo[i],-4+tabo[i+1],4+tabo[i],4+tabo[i+1],0x0000FF);
+            win.draw_fsquare(-4+tabo[2*i],-4+tabo[2*i+1],4+tabo[2*i],4+tabo[2*i+1],0x0000FF);
         }
 
         for (int i = 0; i < pop; ++i)
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
         }
 
         Boids.deplacement();
-        usleep(10000);
+        usleep(1000);
         
     }
     
