@@ -45,7 +45,13 @@ int main(int argc, char* argv[])
     boids Boids = boids();
     individue Individue = individue();
 
-    Boids.Set_dt(0.001);
+
+
+
+
+    //parameter
+    //===============================================================
+    Boids.Set_dt(0.1);  //0.001
 
     Boids.Set_population(100);  //100
 
@@ -54,10 +60,10 @@ int main(int argc, char* argv[])
     Boids.Set_distp(40);
     Boids.Set_distk(5);
 
-    Boids.Set_g1(5);  //5
+    Boids.Set_g1(10);  //5
     Boids.Set_g2(1);  //1
-    Boids.Set_g3(35);  //35
-    Boids.Set_g4(4);
+    Boids.Set_g3(50);  //35
+    Boids.Set_g4(10);
 
     Boids.Set_nb_object(10);
 
@@ -67,8 +73,17 @@ int main(int argc, char* argv[])
     Boids.Set_speed_init(100);  //10
 
     Boids.Set_nb_predator(1);
-    Boids.Set_speed_predator(100);
+    Boids.Set_speed_predator(50);
 
+    Boids.Set_wait(50);
+    Boids.Set_wind_force(10);
+
+    Boids.Set_speed_limit(100);
+
+
+
+    //initialisation
+    //==============================================================
     int w = Boids.Get_width();
     int h = Boids.Get_height();
 
@@ -86,13 +101,16 @@ int main(int argc, char* argv[])
 
     individue* tab = Boids.Get_tab();
 
-    // for (int i = 0; i < pop; ++i)
-    // {
-    //     printf("%lg %lg\n", tabo[i].Get_x(),tabo[i].Get_y());
-    // }
-    // printf("\n");
+
+
+
+
+
+
     
 
+    //inifinite loop
+    //============================================================
     for (;;)
     {
         
@@ -119,12 +137,25 @@ int main(int argc, char* argv[])
 
         int pop = Boids.Get_population();
 
+
+
+
+
+        //for the object
         win.draw_fsquare(0,0,w,h,0xFFFFFF);
         for (int i = 0; i < nbo; i++)
         {
             win.draw_fsquare(-4+tabo[2*i],-4+tabo[2*i+1],4+tabo[2*i],4+tabo[2*i+1],0x0000FF);
         }
 
+
+
+
+
+
+
+
+        //for the population
         for (int i = 0; i < pop; ++i)
         {
             double x = tab[i].Get_x();
@@ -133,6 +164,16 @@ int main(int argc, char* argv[])
             win.draw_fsquare(-2+x,-2+y,2+x,2+y,0xFF0000);
         }
 
+
+
+
+
+
+
+
+
+
+        //for the predator
         for (int i = 0; i < nbp; ++i)
         {
             double x = tabp[i].Get_x();
@@ -142,7 +183,7 @@ int main(int argc, char* argv[])
         }
 
         Boids.deplacement();
-        usleep(3000);
+        usleep(100000);
         
     }
     

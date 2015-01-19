@@ -72,6 +72,10 @@ boids::boids(void)
 
     x_alea = 0;
     y_alea = 0;
+
+    wind_force=0;
+
+    speed_limit=0;
 }
 
 // ===========================================================================
@@ -131,11 +135,33 @@ void boids::initialization(void)
     }
 }
 
+double boids::abs(double x)
+{
+    if (x>0) {return x;}
+    if (x<0) {return -x;}
+}
+
+int boids::signe(double x)
+{
+    if (x>0) {return 1;}
+    if (x<0) {return -1;}
+}
 
 void boids::deplacement(void)
 {
+
+//=============================================================================
+//====================                Prey                  ===================
+//====================                                      ===================
+//=============================================================================
 for (int ind=0; ind<population; ind++)
 {
+
+
+    //initialisation
+    //=====================================================================
+    
+    //for the coordonate of the prey ind
     double x = tab[ind].Get_x();
     double y = tab[ind].Get_y();
     double vx = tab[ind].Get_vx();
@@ -166,12 +192,18 @@ for (int ind=0; ind<population; ind++)
     speed[9] = 0;  //for vy from rule 4
 
 
+
+
+
+
     // for the rules
+    //======================================================================
     for (int i = 0; i < population; ++i)
     {
         double x_other = tab[i].Get_x();
         double y_other = tab[i].Get_y();
 
+        //distance prey prey
         double a = sqrt((x - x_other)*(x - x_other) + (y - y_other)*(y - y_other)); //distance between 2 individue
         if (a<=disti)
         {
@@ -191,6 +223,7 @@ for (int ind=0; ind<population; ind++)
         {
             speed[4] += (x_other - x);
             speed[5] += (y_other - y);
+            
             cc++;
         }
 
@@ -198,12 +231,15 @@ for (int ind=0; ind<population; ind++)
         {
             double xo = tab_object[2*i];
             double yo = tab_object[2*i+1];
+            
+            //distance object prey
             double a = sqrt((x - xo)*(x - xo) + (y - yo)*(y - yo));
             
             if (a<=distc)
             {
                 speed[6] += (xo - x);
                 speed[7] += (yo - y);
+                
                 co++;
             }
         }
@@ -214,6 +250,7 @@ for (int ind=0; ind<population; ind++)
             double xp = predator[i].Get_x();
             double yp = predator[i].Get_y();
 
+            //distance predator prey
             double a = sqrt((x - xp)*(x - xp)+(y - yp)*(y - yp));
 
             speed[8] = - (xp - x)/a;
@@ -221,7 +258,6 @@ for (int ind=0; ind<population; ind++)
         }
         
     }
-
 
     if (ci!=0)
     {
@@ -242,43 +278,125 @@ for (int ind=0; ind<population; ind++)
     {
         speed[6] = - speed[6]/co; 
         speed[7] = - speed[7]/co;
-    }   
+    }
 
 
+
+
+
+
+
+
+
+
+
+    //for the speed
     //==================================================================
 
     vx = vx + dt*(g1*speed[0]+g2*speed[2]+g3*(speed[4]+speed[6])+g4*speed[8]);  //for change the vx
     vy = vy + dt*(g1*speed[1]+g2*speed[3]+g3*(speed[5]+speed[7])+g4*speed[9]);  //for change the vy
 
-    // for the wind
-    if (x<50  && x>-99) {vx = vx +50;}
-    if (x > width - 50) {vx = vx - 50;}
-    if (y<50 && y>-99) {vy = vy +50;}
-    if (y > height - 50) {vy = vy -50;}
 
-    //for the Getter because if no getter the value of vx, vy change at the end of the loop
+
+    //for the speed limit
+    //=================================================================
+    if (abs(vx)>speed_limit) 
+    {
+        int sign = signe(vx);
+        vx = abs(vx) - wind_force;
+        vx = sign*vx;
+    }
+    if (abs(vy)>speed_limit) 
+    {
+        int sign = signe(vy);
+        vy = abs(vy) - wind_force;
+        vy = sign*vy;
+    }
+
+
+
+
+
+
+    // for the wind
+    //==================================================================
+    if (x<50  && x>-99) {vx = vx +wind_force;}
+    if (x > width - 50) {vx = vx - wind_force;} 
+    if (y<50 && y>-99) {vy = vy +wind_force;}
+    if (y > height - 50) {vy = vy -wind_force;}
+
+
+
+
+
+
+
+
+    //for the Getter because if no getter the value of vx, vy
+    //change at the end of the loop
+    //===================================================================
     Getter[4*ind+2] = vx;
     Getter[4*ind+3] = vy; 
 }
 
+
+
+
+
+
+
+
+
 //=============================================================================
+//====================                Predator              ===================
+//====================                                      ===================
+//=============================================================================
+
 //for mouvement of predators
 for (int i = 0; i < nb_predator; ++i)
 {
+    double vx_pred = 0;
+    double vy_pred = 0;
 
+    // printf("%lg %lg\n",predator[i].Get_vx(), predator[i].Get_vy());
+
+
+
+
+    //if the predator doesn't eat any prey
+    //========================================================================
     if (predator_feed[i]==0 || predator_feed[i] > wait)
     {
-        predator_feed[i]=0;
 
+        //initialisation
+        //===========================================================
+
+        //for the coordonate of the predator
         double x_pred = predator[i].Get_x();
         double y_pred = predator[i].Get_y();
 
-        double min = distp+1; // +1 for the case a = distp, min for find the distance min in the radius of the sight of this predator
-        int prey = population+1; // for numero of the prey
+
+        //for reinitialize the parameter predator_feed for when the predator
+        //digeste the prey
+        predator_feed[i]=0;
+
+
+        // +1 for the case a = distp, min for find the distance min
+        // in the radius of the sight of this predator
+        double min = distp+1;
+
+        // for numero of the prey
+        int prey = population+1;
+
+
+
+
 
         // find the next prey
+        //===========================================================
         for (int pop = 0; pop < population; ++pop)
         {
+            //distance predator prey
             double a = sqrt((x_pred - tab[pop].Get_x())*(x_pred - tab[pop].Get_x())+(y_pred - tab[pop].Get_y())*(y_pred - tab[pop].Get_y()));
     
             if (a<=distp && a<min)
@@ -288,19 +406,32 @@ for (int i = 0; i < nb_predator; ++i)
             }
         }
 
-        predator[i].Set_x(x_pred + dt*predator[i].Get_vx());
-        predator[i].Set_y(x_pred + dt*predator[i].Get_vy());
 
-        //if he see a prey
+
+
+
+
+        //if it see a prey
+        //==========================================================
         if (min <= distp && min > distk)
         {
-            predator[i].Set_vx((tab[prey].Get_x() - x_pred)*speed_predator/min);
-            predator[i].Set_vy((tab[prey].Get_y() - y_pred)*speed_predator/min);
+            vx_pred=(tab[prey].Get_x() - x_pred)*speed_predator/min;
+            vy_pred=(tab[prey].Get_y() - y_pred)*speed_predator/min;
+
+            predator[i].Set_vx(vx_pred);
+            predator[i].Set_vy(vy_pred);
 
             found_no_prey[i] = false;
         }
 
-        //if he is out of reach for the prey for the first time
+
+
+
+
+
+
+        //if it is out of reach for the prey for the first time
+        //==========================================================
         if (min > distp  && found_no_prey[i]==false)
         {
             x_alea = ((width-100)-100)*((double)rand()/(double)RAND_MAX)+100;
@@ -308,16 +439,23 @@ for (int i = 0; i < nb_predator; ++i)
 
             double d = sqrt((x_pred - x_alea)*(x_pred - x_alea)+(y_alea - y_pred)*(y_alea - y_pred));
 
-            predator[i].Set_vx((x_alea - x_pred)*speed_predator/d);
-            predator[i].Set_vy((y_alea - y_pred)*speed_predator/d);
+            vx_pred=(x_alea - x_pred)*speed_predator/d;
+            vy_pred=(y_alea - y_pred)*speed_predator/d;
+
+            predator[i].Set_vx(vx_pred);
+            predator[i].Set_vy(vy_pred);
 
             found_no_prey[i] = true;
-
-            printf("%lg %lg\n", x_alea, y_alea);
         }
 
 
+
+
+
+
+
         //if the predator kill a boid
+        //===========================================================
         if (min<=distk)
         {
 
@@ -370,20 +508,51 @@ for (int i = 0; i < nb_predator; ++i)
 
         }
 
+
+
+
+
+
+
+
         //for the wind
+        //=============================================================
         if (x_pred<50) {predator[i].Set_vx(- predator[i].Get_vx());}
         if (y_pred<50) {predator[i].Set_vy(- predator[i].Get_vy());}
         if (x_pred>width-50) {predator[i].Set_vx(- predator[i].Get_vx());}
         if (y_pred<height-50) {predator[i].Set_vy(- predator[i].Get_vy());}
+
+
+        //for set the coordonate
+        predator[i].Set_x(x_pred + dt*predator[i].Get_vx());
+        predator[i].Set_y(x_pred + dt*predator[i].Get_vy());
     }
 
-    if (predator_feed[i]>0 && predator_feed[i]<=wait+1)
+
+
+
+
+
+
+
+
+    if (predator_feed[i]>0 && predator_feed[i]<=wait)
     {
         predator_feed[i]++;
     }
+
+
+
 }
 
 
+
+
+
+
+
+//for set the speed and coordonate
+//===========================================================================
 for (int i = 0; i < population; ++i)
 {
     tab[i].Set_x(Getter[4*i]); // for x

@@ -72,6 +72,10 @@ class boids
     inline void Set_speed_init(double sl);
 
     inline void Set_wait(int w);
+
+    inline void Set_wind_force(double wf);
+
+    inline void Set_speed_limit(double sl);
     // =======================================================================
     //                              Public Methods
     // =======================================================================
@@ -79,7 +83,8 @@ class boids
 
     void deplacement(void);
 
-
+    double abs(double x);
+    int signe(double x);
 
   protected :
 
@@ -128,6 +133,10 @@ class boids
 
     double x_alea;
     double y_alea;
+
+    double wind_force;
+
+    double speed_limit;
     
 };
 
@@ -174,6 +183,10 @@ inline void boids::Set_height(int h) {height = h;}
 inline void boids::Set_speed_init(double sl){speed_init = sl;}
 
 inline void boids::Set_wait(int w) {wait=w;}
+
+inline void boids::Set_wind_force(double wf){wind_force=wf;}
+
+inline void boids::Set_speed_limit(double sl) {speed_limit=sl;}
 
 
 #endif // __BOIDS_H__
