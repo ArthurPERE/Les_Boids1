@@ -47,16 +47,16 @@ int main(int argc, char* argv[])
 
     Boids.Set_dt(0.001);
 
-    Boids.Set_population(100);
+    Boids.Set_population(100);  //100
 
     Boids.Set_disti(60);
     Boids.Set_distc(10);
     Boids.Set_distp(40);
-    Boids.Set_distk(0);
+    Boids.Set_distk(5);
 
-    Boids.Set_g1(5);
-    Boids.Set_g2(1);
-    Boids.Set_g3(35);
+    Boids.Set_g1(5);  //5
+    Boids.Set_g2(1);  //1
+    Boids.Set_g3(35);  //35
     Boids.Set_g4(4);
 
     Boids.Set_nb_object(10);
@@ -64,10 +64,10 @@ int main(int argc, char* argv[])
     Boids.Set_width(700);
     Boids.Set_height(700);
 
-    Boids.Set_speed_init(10);
+    Boids.Set_speed_init(100);  //10
 
     Boids.Set_nb_predator(1);
-    Boids.Set_speed_predator(10);
+    Boids.Set_speed_predator(100);
 
     int w = Boids.Get_width();
     int h = Boids.Get_height();
@@ -76,8 +76,7 @@ int main(int argc, char* argv[])
     bwindow win(w,h);
     printf("%d\n",win.init());
     win.map();
-    Boids.initialization();
-    int pop = Boids.Get_population(); 
+    Boids.initialization(); 
 
     int nbo = Boids.Get_nb_object();
     double* tabo = Boids.Get_tab_object();
@@ -118,6 +117,8 @@ int main(int argc, char* argv[])
         break;
         }
 
+        int pop = Boids.Get_population();
+
         win.draw_fsquare(0,0,w,h,0xFFFFFF);
         for (int i = 0; i < nbo; i++)
         {
@@ -141,7 +142,7 @@ int main(int argc, char* argv[])
         }
 
         Boids.deplacement();
-        usleep(1000);
+        usleep(3000);
         
     }
     

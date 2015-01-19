@@ -7,7 +7,7 @@ main.o: main.cpp
 	g++ -Wall -g -lm -c main.cpp
 
 boids.o: boids.h boids.cpp individue.h
-	g++ -o boids.o boids.cpp -c
+	g++ -o boids.o boids.cpp -c -g
 
 individue.o: individue.h individue.cpp
 	g++ -o individue.o individue.cpp -c

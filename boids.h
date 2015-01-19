@@ -70,6 +70,8 @@ class boids
     inline void Set_height(int h);
 
     inline void Set_speed_init(double sl);
+
+    inline void Set_wait(int w);
     // =======================================================================
     //                              Public Methods
     // =======================================================================
@@ -120,7 +122,9 @@ class boids
     int width;
     int height;
 
-    bool found_no_prey; // for choose a direction and stay at that direction
+    bool* found_no_prey; // for choose a direction and stay at that direction
+    int* predator_feed;
+    int wait;
 
     double x_alea;
     double y_alea;
@@ -168,6 +172,8 @@ inline void boids::Set_width(int w) {width = w;}
 inline void boids::Set_height(int h) {height = h;}
 
 inline void boids::Set_speed_init(double sl){speed_init = sl;}
+
+inline void boids::Set_wait(int w) {wait=w;}
 
 
 #endif // __BOIDS_H__

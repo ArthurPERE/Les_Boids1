@@ -30,7 +30,7 @@ boids::boids(void)
     predator=NULL;
     tab_object=NULL;
     Getter=NULL;    
-(double)rand()/(double)RAND_MAX;
+
     disti = 0;
     distc = 0;
     distp = 0;
@@ -56,7 +56,19 @@ boids::boids(void)
 
     speed_init = 0;
 
-    found_no_prey = 0;
+    found_no_prey = new bool[nb_predator];
+    for (int i = 0; i < nb_predator; ++i)
+    {
+        found_no_prey[i]=true;
+    }
+
+    wait = 0;
+
+    predator_feed = new int[nb_predator];
+    for (int i = 0; i < nb_predator; ++i)
+    {
+        predator_feed[i]=0;
+    }
 
     x_alea = 0;
     y_alea = 0;
@@ -74,6 +86,10 @@ boids::~boids(void)
     delete [] Getter;
 
     delete [] predator;
+
+    delete [] found_no_prey;
+
+    delete [] predator_feed;
 }
 
 // ===========================================================================
@@ -235,78 +251,145 @@ for (int ind=0; ind<population; ind++)
     vy = vy + dt*(g1*speed[1]+g2*speed[3]+g3*(speed[5]+speed[7])+g4*speed[9]);  //for change the vy
 
     // for the wind
-    if (x<50) {vx = vx +100;}
-    if (x > width - 50) {vx = vx - 100;}
-    if (y<50) {vy = vy +100;}
-    if (y > height - 50) {vy = vy -100;}
+    if (x<50  && x>-99) {vx = vx +50;}
+    if (x > width - 50) {vx = vx - 50;}
+    if (y<50 && y>-99) {vy = vy +50;}
+    if (y > height - 50) {vy = vy -50;}
 
     //for the Getter because if no getter the value of vx, vy change at the end of the loop
     Getter[4*ind+2] = vx;
     Getter[4*ind+3] = vy; 
 }
 
+//=============================================================================
 //for mouvement of predators
 for (int i = 0; i < nb_predator; ++i)
 {
-    double x_pred = predator[i].Get_x();
-    double y_pred = predator[i].Get_y();
 
-    double min = distp+1; // +1 for the case a = distp, min for find the distance min in the radius of the sight of this predator
-    int prey = population+1; // for numero of the prey
-
-    // find the next prey
-    for (int pop = 0; pop < population; ++pop)
+    if (predator_feed[i]==0 || predator_feed[i] > wait)
     {
-        double a = sqrt((x_pred - tab[pop].Get_x())*(x_pred - tab[pop].Get_x())+(y_pred - tab[pop].Get_y())*(y_pred - tab[pop].Get_y()));
-    
-        if (a<=distp && a<min)
+        predator_feed[i]=0;
+
+        double x_pred = predator[i].Get_x();
+        double y_pred = predator[i].Get_y();
+
+        double min = distp+1; // +1 for the case a = distp, min for find the distance min in the radius of the sight of this predator
+        int prey = population+1; // for numero of the prey
+
+        // find the next prey
+        for (int pop = 0; pop < population; ++pop)
         {
-            prey = pop;  
-            min = a;
+            double a = sqrt((x_pred - tab[pop].Get_x())*(x_pred - tab[pop].Get_x())+(y_pred - tab[pop].Get_y())*(y_pred - tab[pop].Get_y()));
+    
+            if (a<=distp && a<min)
+            {
+                prey = pop;  
+                min = a;
+            }
         }
 
-    }
-
-    if (min <= distp && min > distk)
-    {
         predator[i].Set_x(x_pred + dt*predator[i].Get_vx());
         predator[i].Set_y(x_pred + dt*predator[i].Get_vy());
 
-        predator[i].Set_vx((tab[prey].Get_x() - x_pred)*speed_predator/min);
-        predator[i].Set_vy((tab[prey].Get_y() - y_pred)*speed_predator/min);
-
-        found_no_prey = 0;
-    }
-
-    if (min > distp)
-    {
-        predator[i].Set_x(x_pred + dt*predator[i].Get_vx());
-        predator[i].Set_y(x_pred + dt*predator[i].Get_vy());
-
-        if (found_no_prey=0)
+        //if he see a prey
+        if (min <= distp && min > distk)
         {
-            srand(time(NULL));
+            predator[i].Set_vx((tab[prey].Get_x() - x_pred)*speed_predator/min);
+            predator[i].Set_vy((tab[prey].Get_y() - y_pred)*speed_predator/min);
 
-            x_alea = width*(double)rand()/(double)RAND_MAX;
-            y_alea = height*(double)rand()/(double)RAND_MAX;
+            found_no_prey[i] = false;
+        }
 
-            double d = sqrt((predator[i].Get_x() - x_alea)*(predator[i].Get_x() - x_alea)+(y_alea - predator[i].Get_y())*(y_alea - predator[i].Get_x()));
+        //if he is out of reach for the prey for the first time
+        if (min > distp  && found_no_prey[i]==false)
+        {
+            x_alea = ((width-100)-100)*((double)rand()/(double)RAND_MAX)+100;
+            y_alea = ((height-100)-100)*((double)rand()/(double)RAND_MAX)+100;
+
+            double d = sqrt((x_pred - x_alea)*(x_pred - x_alea)+(y_alea - y_pred)*(y_alea - y_pred));
 
             predator[i].Set_vx((x_alea - x_pred)*speed_predator/d);
             predator[i].Set_vy((y_alea - y_pred)*speed_predator/d);
 
-            found_no_prey = 1;
+            found_no_prey[i] = true;
+
+            printf("%lg %lg\n", x_alea, y_alea);
         }
+
+
+        //if the predator kill a boid
+        if (min<=distk)
+        {
+
+            // printf("%lg\n", min);
+            // printf("%d\n", prey);
+            // //temporal tab of individue
+            // double tab_temp[4*(population-1)];
+
+            // for (int pop = 0; pop < population; ++pop)
+            // {
+            //     //take information in the temporal tab
+            //     if (pop != prey)
+            //     {
+            //         tab_temp[4*pop] = tab[pop].Get_x();
+            //         tab_temp[4*pop+1] = tab[pop].Get_y();
+
+            //         tab_temp[4*pop+2] = tab[pop].Get_vx();
+            //         tab_temp[4*pop+3] = tab[pop].Get_vy();
+            //     }
+            // }
+
+            //     delete[] tab;
+            //     tab=NULL;
+
+            //     population = population - 1;
+         
+            // //individue* tab = new individue[population];
+            // tab = new individue[population];
+            // for (int pop = 0; pop < population; ++pop)
+            // {
+            //     tab[pop].Set_x(tab_temp[4*pop]);
+            //     tab[pop].Set_y(tab_temp[4*pop+1]);
+            //     tab[pop].Set_vx(tab_temp[4*pop+2]);
+            //     tab[pop].Set_vy(tab_temp[4*pop+3]);
+            // }
+
+
+            // another idea
+
+            
+
+            Getter[4*prey]=-1000;
+            Getter[4*prey+1]=-1000;
+            Getter[4*prey+2]=0;
+            Getter[4*prey+3]=0;
+
+
+            predator_feed[i]=1;
+
+
+        }
+
+        //for the wind
+        if (x_pred<50) {predator[i].Set_vx(- predator[i].Get_vx());}
+        if (y_pred<50) {predator[i].Set_vy(- predator[i].Get_vy());}
+        if (x_pred>width-50) {predator[i].Set_vx(- predator[i].Get_vx());}
+        if (y_pred<height-50) {predator[i].Set_vy(- predator[i].Get_vy());}
+    }
+
+    if (predator_feed[i]>0 && predator_feed[i]<=wait+1)
+    {
+        predator_feed[i]++;
     }
 }
 
 
 for (int i = 0; i < population; ++i)
 {
-    tab[i].Set_x(Getter[4*i]); 
-    tab[i].Set_y(Getter[4*i+1]); 
-    tab[i].Set_vx(Getter[4*i+2]);
-    tab[i].Set_vy(Getter[4*i+3]);
+    tab[i].Set_x(Getter[4*i]); // for x
+    tab[i].Set_y(Getter[4*i+1]); //for y
+    tab[i].Set_vx(Getter[4*i+2]); //for vx
+    tab[i].Set_vy(Getter[4*i+3]);  //for vy
 }
 
 }
