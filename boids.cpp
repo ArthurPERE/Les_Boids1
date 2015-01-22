@@ -76,6 +76,9 @@ boids::boids(void)
     wind_force=0;
 
     speed_limit=0;
+
+    vx_pred=0;
+    vy_pred=0;
 }
 
 // ===========================================================================
@@ -302,15 +305,11 @@ for (int ind=0; ind<population; ind++)
     //=================================================================
     if (abs(vx)>speed_limit) 
     {
-        int sign = signe(vx);
-        vx = abs(vx) - wind_force;
-        vx = sign*vx;
+        vx = signe(vx)*speed_limit;
     }
     if (abs(vy)>speed_limit) 
     {
-        int sign = signe(vy);
-        vy = abs(vy) - wind_force;
-        vy = sign*vy;
+        vy = signe(vy)*speed_limit;
     }
 
 
@@ -355,10 +354,7 @@ for (int ind=0; ind<population; ind++)
 //for mouvement of predators
 for (int i = 0; i < nb_predator; ++i)
 {
-    double vx_pred = 0;
-    double vy_pred = 0;
-
-    // printf("%lg %lg\n",predator[i].Get_vx(), predator[i].Get_vy());
+    //printf("%lg %lg\n",predator[i].Get_vx(), predator[i].Get_vy());
 
 
 
@@ -418,9 +414,6 @@ for (int i = 0; i < nb_predator; ++i)
             vx_pred=(tab[prey].Get_x() - x_pred)*speed_predator/min;
             vy_pred=(tab[prey].Get_y() - y_pred)*speed_predator/min;
 
-            predator[i].Set_vx(vx_pred);
-            predator[i].Set_vy(vy_pred);
-
             found_no_prey[i] = false;
         }
 
@@ -441,9 +434,6 @@ for (int i = 0; i < nb_predator; ++i)
 
             vx_pred=(x_alea - x_pred)*speed_predator/d;
             vy_pred=(y_alea - y_pred)*speed_predator/d;
-
-            predator[i].Set_vx(vx_pred);
-            predator[i].Set_vy(vy_pred);
 
             found_no_prey[i] = true;
         }
@@ -504,8 +494,6 @@ for (int i = 0; i < nb_predator; ++i)
 
 
             predator_feed[i]=1;
-
-
         }
 
 
@@ -517,15 +505,21 @@ for (int i = 0; i < nb_predator; ++i)
 
         //for the wind
         //=============================================================
-        if (x_pred<50) {predator[i].Set_vx(- predator[i].Get_vx());}
-        if (y_pred<50) {predator[i].Set_vy(- predator[i].Get_vy());}
-        if (x_pred>width-50) {predator[i].Set_vx(- predator[i].Get_vx());}
-        if (y_pred<height-50) {predator[i].Set_vy(- predator[i].Get_vy());}
+        if (x_pred<50) {vx_pred = - vx_pred;}
+        if (y_pred<50) {vy_pred = - vy_pred;}
+        if (x_pred>width-50) {vx_pred = - vx_pred;}
+        if (y_pred>height-50) {vy_pred = - vy_pred;}
+
 
 
         //for set the coordonate
-        predator[i].Set_x(x_pred + dt*predator[i].Get_vx());
-        predator[i].Set_y(x_pred + dt*predator[i].Get_vy());
+        predator[i].Set_x(x_pred + dt*vx_pred);
+        predator[i].Set_y(y_pred + dt*vy_pred);
+
+        predator[i].Set_vx(vx_pred);
+        predator[i].Set_vy(vy_pred);
+
+        printf("%lg %lg %lg %lg\n", predator[i].Get_x(),predator[i].Get_y(),predator[i].Get_vx(),predator[i].Get_vy());
     }
 
 
@@ -535,14 +529,12 @@ for (int i = 0; i < nb_predator; ++i)
 
 
 
-
+    // if the predator had eaten
+    //===================================================================
     if (predator_feed[i]>0 && predator_feed[i]<=wait)
     {
         predator_feed[i]++;
     }
-
-
-
 }
 
 

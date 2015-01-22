@@ -137,6 +137,9 @@ class boids
     double wind_force;
 
     double speed_limit;
+
+    double vx_pred;
+    double vy_pred;
     
 };
 

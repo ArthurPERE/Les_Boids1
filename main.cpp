@@ -60,17 +60,17 @@ int main(int argc, char* argv[])
     Boids.Set_distp(40);
     Boids.Set_distk(5);
 
-    Boids.Set_g1(10);  //5
+    Boids.Set_g1(5);  //5
     Boids.Set_g2(1);  //1
-    Boids.Set_g3(50);  //35
+    Boids.Set_g3(35);  //35
     Boids.Set_g4(10);
 
-    Boids.Set_nb_object(10);
+    Boids.Set_nb_object(0);
 
     Boids.Set_width(700);
     Boids.Set_height(700);
 
-    Boids.Set_speed_init(100);  //10
+    Boids.Set_speed_init(10);  //10
 
     Boids.Set_nb_predator(1);
     Boids.Set_speed_predator(50);
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
     Boids.Set_wait(50);
     Boids.Set_wind_force(10);
 
-    Boids.Set_speed_limit(100);
+    Boids.Set_speed_limit(200);
 
 
 
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
         win.draw_fsquare(0,0,w,h,0xFFFFFF);
         for (int i = 0; i < nbo; i++)
         {
-            win.draw_fsquare(-4+tabo[2*i],-4+tabo[2*i+1],4+tabo[2*i],4+tabo[2*i+1],0x0000FF);
+            win.draw_fsquare(-2+tabo[2*i],-2+tabo[2*i+1],2+tabo[2*i],2+tabo[2*i+1],0x0000FF);
         }
 
 
@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
             double x = tab[i].Get_x();
             double y = tab[i].Get_y();
 
-            win.draw_fsquare(-2+x,-2+y,2+x,2+y,0xFF0000);
+            win.draw_fsquare(-1+x,-1+y,1+x,1+y,0xFF0000);
         }
 
 
@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
         }
 
         Boids.deplacement();
-        usleep(100000);
+        usleep(100000);  //100000
         
     }
     
